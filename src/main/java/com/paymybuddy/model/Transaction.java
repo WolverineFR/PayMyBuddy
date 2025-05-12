@@ -1,30 +1,55 @@
 package com.paymybuddy.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "dbtransaction")
 public class Transaction {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int sender_id;
-	private int receiver_id;
-	private String description;
-	private double amount;
 
-	public Transaction(int id, int sender_id, int receiver_id, String description, double amount) {
+	@ManyToOne
+	@JoinColumn(name = "sender_id")
+	private DBUser sender;
+
+	@ManyToOne
+	@JoinColumn(name = "receiver_id")
+	private DBUser receiver;
+
+	private String description;
+	private BigDecimal amount;
+	private BigDecimal fee;
+
+	private LocalDateTime timestamp;
+
+	@ManyToOne
+	@JoinColumn(name = "wallet_id")
+	private AppWallet wallet;
+
+	public Transaction(int id, DBUser sender, DBUser receiver, String description, BigDecimal amount, BigDecimal fee,
+			LocalDateTime timestamp) {
 		this.id = id;
-		this.sender_id = sender_id;
-		this.receiver_id = receiver_id;
+		this.sender = sender;
+		this.receiver = receiver;
 		this.description = description;
 		this.amount = amount;
+		this.fee = fee;
+		this.timestamp = timestamp;
 	}
 
 	// Getters and Setters
+
 	public int getId() {
 		return id;
 	}
@@ -33,20 +58,20 @@ public class Transaction {
 		this.id = id;
 	}
 
-	public int getSender_id() {
-		return sender_id;
+	public DBUser getSender() {
+		return sender;
 	}
 
-	public void setSender_id(int sender_id) {
-		this.sender_id = sender_id;
+	public void setSender(DBUser sender) {
+		this.sender = sender;
 	}
 
-	public int getReceiver_id() {
-		return receiver_id;
+	public DBUser getReceiver() {
+		return receiver;
 	}
 
-	public void setReceiver_id(int receiver_id) {
-		this.receiver_id = receiver_id;
+	public void setReceiver(DBUser receiver) {
+		this.receiver = receiver;
 	}
 
 	public String getDescription() {
@@ -57,12 +82,37 @@ public class Transaction {
 		this.description = description;
 	}
 
-	public double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
+	public BigDecimal getFee() {
+		return fee;
+	}
+
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
+
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public AppWallet getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(AppWallet wallet) {
+		this.wallet = wallet;
+	}
+	
 
 }
