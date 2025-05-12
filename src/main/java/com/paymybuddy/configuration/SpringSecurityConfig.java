@@ -1,8 +1,8 @@
 package com.paymybuddy.configuration;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,15 +10,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
 import com.paymybuddy.service.CustomUserDetailsService;
 
 @Configuration
@@ -33,6 +28,7 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests(auth -> {
+			auth.requestMatchers("/user").authenticated();
 			auth.anyRequest().authenticated();
 		}).formLogin(Customizer.withDefaults()).build();
 	}
@@ -54,4 +50,16 @@ public class SpringSecurityConfig {
 		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
 		return authenticationManagerBuilder.build();
 	}
+	
+	/*
+	@Bean
+    CommandLineRunner generatePassword() {
+        return args -> {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String password = "jaimelesfleurs";
+            String hashed = encoder.encode(password);
+            System.out.println("Mot de passe chiffré : " + hashed);
+        };
+    }
+    */
 }
