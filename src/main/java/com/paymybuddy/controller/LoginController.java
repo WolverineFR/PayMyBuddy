@@ -14,11 +14,11 @@ public class LoginController {
 		this.authorizedClientService = authorizedClientService;
 	}
 	*/
-	
+	/*
 	@GetMapping("/user")
 	public String getUser() {
 		return "Welcome, User";
 	}
 	
-	
+	*/
 }

@@ -3,6 +3,7 @@ package com.paymybuddy.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,21 +15,24 @@ import jakarta.persistence.Table;
 @Table(name = "app_wallet")
 public class AppWallet {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
-    private BigDecimal totalFeesCollected;
+	@Column(name = "fee_amount")
+	private BigDecimal totalFeesCollected;
 
-    @OneToMany(mappedBy = "wallet")
-    private List<Transaction> transactions;
+	public AppWallet() {
 
-    public AppWallet (int id, BigDecimal totalFeesCollected) {
-    	this.id = id;
-    	this.totalFeesCollected = totalFeesCollected;
-    }
-    
-    // Getters and Setters
+	}
+
+	public AppWallet(int id, BigDecimal totalFeesCollected) {
+		this.id = id;
+		this.totalFeesCollected = totalFeesCollected;
+	}
+
+	// Getters and Setters
 	public int getId() {
 		return id;
 	}
@@ -45,13 +49,4 @@ public class AppWallet {
 		this.totalFeesCollected = totalFeesCollected;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
-	}
-
-    
 }

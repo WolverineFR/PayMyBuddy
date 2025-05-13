@@ -24,7 +24,7 @@ public class SpringSecurityConfig {
 	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
+	/*
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests(auth -> {
@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
 			auth.anyRequest().authenticated();
 		}).formLogin(Customizer.withDefaults()).build();
 	}
-	
+	*/
 	@Bean
 	public UserDetailsService users () {
 		
@@ -61,5 +61,19 @@ public class SpringSecurityConfig {
             System.out.println("Mot de passe chiffré : " + hashed);
         };
     }
-    */
+    */	
+	
+	@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/user/all").permitAll()  // autorise cette route sans login
+                .anyRequest().authenticated()             // tout le reste est protégé
+            )
+            .formLogin()  // active le login form par défaut
+            .and()
+            .csrf().disable();  // à activer selon ton besoin
+
+        return http.build();
+    }
 }

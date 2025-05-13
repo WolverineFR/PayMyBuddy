@@ -3,6 +3,8 @@ package com.paymybuddy.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,24 +17,32 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "dbuser")
+@Table(name = "db_user")
 public class DBUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
+	
+	@Column(name="username")
 	private String username;
 
-	@Column(unique = true)
+	@Column(unique = true, name = "email")
 	private String email;
 
+	@Column(name="password")
 	private String password;
+	
+	@Column(name="balance")
 	private BigDecimal balance;
 
 	@OneToMany(mappedBy = "sender")
+	@JsonManagedReference
 	private List<Transaction> sentTransactions;
 
 	@OneToMany(mappedBy = "receiver")
+	@JsonManagedReference
 	private List<Transaction> receivedTransactions;
 
 	@ManyToMany

@@ -3,6 +3,9 @@ package com.paymybuddy.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,30 +15,39 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "dbtransaction")
+@Table(name = "db_transaction")
 public class Transaction {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
 	private int id;
 
 	@ManyToOne
 	@JoinColumn(name = "sender_id")
+	@JsonManagedReference
 	private DBUser sender;
 
 	@ManyToOne
 	@JoinColumn(name = "receiver_id")
+	@JsonManagedReference
 	private DBUser receiver;
 
+	@Column(name="description")
 	private String description;
+	
+	@Column(name="amount")
 	private BigDecimal amount;
+	
+	@Column(name="fee")
 	private BigDecimal fee;
 
+	
 	private LocalDateTime timestamp;
-
-	@ManyToOne
-	@JoinColumn(name = "wallet_id")
-	private AppWallet wallet;
+	
+	public Transaction() {
+		
+	}
 
 	public Transaction(int id, DBUser sender, DBUser receiver, String description, BigDecimal amount, BigDecimal fee,
 			LocalDateTime timestamp) {
@@ -104,14 +116,6 @@ public class Transaction {
 
 	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public AppWallet getWallet() {
-		return wallet;
-	}
-
-	public void setWallet(AppWallet wallet) {
-		this.wallet = wallet;
 	}
 	
 
