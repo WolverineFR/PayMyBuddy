@@ -1,6 +1,7 @@
 package com.paymybuddy.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,4 +18,17 @@ public class UserService {
 	public List<DBUser> getUsers() {
 		return userRepository.findAll();
 	}
+	
+	public Optional<DBUser> getUserById(int id) {
+		return userRepository.findById(id);
+	}
+	
+	public DBUser saveUser (DBUser user) {
+		return userRepository.save(user);
+	}
+	
+	public void deleteUserById (int id) {
+		userRepository.deleteById(id);
+	}
+
 }
