@@ -23,8 +23,18 @@ public class UserService {
 		return userRepository.findById(id);
 	}
 	
-	public DBUser saveUser (DBUser user) {
+	public DBUser addUser (DBUser user) {
 		return userRepository.save(user);
+	}
+	
+	public Optional<DBUser> editUser (int id, DBUser user) {
+		
+		return userRepository.findById(id).map(editedUser -> {
+			editedUser.setUsername(user.getUsername());
+			editedUser.setEmail(user.getEmail());
+			editedUser.setPassword(user.getPassword());
+			return userRepository.save(editedUser);
+		});
 	}
 	
 	public void deleteUserById (int id) {

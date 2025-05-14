@@ -67,9 +67,8 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/user/all").permitAll()
-                .requestMatchers("user/{id}").permitAll()// autorise cette route sans login
-                .anyRequest().authenticated()             // tout le reste est protégé
+                .requestMatchers("/user/**").permitAll()
+                .anyRequest().authenticated()            
             )
             .formLogin()  // active le login form par défaut
             .and()

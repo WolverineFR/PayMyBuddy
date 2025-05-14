@@ -6,8 +6,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,10 +36,25 @@ public class UserController {
 		return users.stream().map(UserDTO::new).collect(Collectors.toList());
 
 	}
-	
+
 	@GetMapping("{id}")
 	public UserDTO getUserById(@PathVariable Integer id) {
 		Optional<DBUser> userById = userService.getUserById(id);
 		return new UserDTO(userById.get());
+	}
+
+	@PostMapping
+	public DBUser saveUser(@RequestBody DBUser user) {
+		return userService.addUser(user);
+	}
+
+	@PutMapping("/{id}")
+	public Optional<DBUser> editUser(@PathVariable Integer id, @RequestBody DBUser user) {
+		return userService.editUser(id, user);
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteUser(@PathVariable Integer id) {
+		userService.deleteUserById(id);
 	}
 }

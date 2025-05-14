@@ -3,6 +3,7 @@ package com.paymybuddy.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -25,12 +26,12 @@ public class Transaction {
 
 	@ManyToOne
 	@JoinColumn(name = "sender_id")
-	@JsonManagedReference
+	@JsonBackReference("sentTransactions")
 	private DBUser sender;
 
 	@ManyToOne
 	@JoinColumn(name = "receiver_id")
-	@JsonManagedReference
+	@JsonBackReference("receivedTransactions")
 	private DBUser receiver;
 
 	@Column(name="description")

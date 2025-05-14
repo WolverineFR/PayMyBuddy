@@ -1,6 +1,7 @@
 package com.paymybuddy.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -35,19 +36,19 @@ public class DBUser {
 	private String password;
 	
 	@Column(name="balance")
-	private BigDecimal balance;
+	private BigDecimal balance = BigDecimal.ZERO;
 
 	@OneToMany(mappedBy = "sender")
-	@JsonManagedReference
-	private List<Transaction> sentTransactions;
+	@JsonManagedReference("sentTransactions")
+	private List<Transaction> sentTransactions = new ArrayList<>();
 
 	@OneToMany(mappedBy = "receiver")
-	@JsonManagedReference
-	private List<Transaction> receivedTransactions;
+	@JsonManagedReference("receivedTransactions")
+	private List<Transaction> receivedTransactions = new ArrayList<>();
 
-	@ManyToMany
+	@OneToMany
 	@JoinTable(name = "user_friend", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
-	private List<DBUser> friends;
+	private List<DBUser> friends = new ArrayList<>();
 
 	public DBUser() {
 
