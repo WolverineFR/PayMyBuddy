@@ -68,6 +68,7 @@ public class SpringSecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/user/**").permitAll()
+                .requestMatchers("/transaction/**").permitAll()
                 .anyRequest().authenticated()            
             )
             .formLogin()  // active le login form par défaut

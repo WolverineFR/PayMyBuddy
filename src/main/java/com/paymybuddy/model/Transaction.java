@@ -44,7 +44,7 @@ public class Transaction {
 	private BigDecimal fee;
 
 	
-	private LocalDateTime timestamp;
+	private LocalDateTime timestamp = LocalDateTime.now();
 	
 	public Transaction() {
 		
