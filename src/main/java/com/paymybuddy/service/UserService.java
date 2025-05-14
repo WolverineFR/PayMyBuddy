@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.model.DBUser;
@@ -12,6 +13,9 @@ import com.paymybuddy.repository.UserRepository;
 @Service
 public class UserService {
 
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -24,15 +28,17 @@ public class UserService {
 	}
 	
 	public DBUser addUser (DBUser user) {
+		String passwordCrypted = passwordEncoder.encode(user.getPassword());
+		user.setPassword(passwordCrypted);
 		return userRepository.save(user);
 	}
 	
 	public Optional<DBUser> editUser (int id, DBUser user) {
-		
+		String passwordCrypted = passwordEncoder.encode(user.getPassword());
 		return userRepository.findById(id).map(editedUser -> {
 			editedUser.setUsername(user.getUsername());
 			editedUser.setEmail(user.getEmail());
-			editedUser.setPassword(user.getPassword());
+			editedUser.setPassword(passwordCrypted);
 			return userRepository.save(editedUser);
 		});
 	}
