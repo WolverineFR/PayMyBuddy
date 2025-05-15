@@ -21,15 +21,15 @@ public class AppWallet {
 	private int id;
 
 	@Column(name = "fee_amount")
-	private BigDecimal totalFeesCollected;
+	private BigDecimal balance;
 
 	public AppWallet() {
 
 	}
 
-	public AppWallet(int id, BigDecimal totalFeesCollected) {
+	public AppWallet(int id, BigDecimal balance) {
 		this.id = id;
-		this.totalFeesCollected = totalFeesCollected;
+		this.balance = balance;
 	}
 
 	// Getters and Setters
@@ -42,11 +42,11 @@ public class AppWallet {
 	}
 
 	public BigDecimal getTotalFeesCollected() {
-		return totalFeesCollected;
+		return balance;
 	}
 
-	public void setTotalFeesCollected(BigDecimal totalFeesCollected) {
-		this.totalFeesCollected = totalFeesCollected;
+	public void setTotalFeesCollected(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 }

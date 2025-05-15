@@ -19,11 +19,16 @@ import jakarta.transaction.Transactional;
 @Service
 public class TransactionService {
 
+	private static final BigDecimal FEE_PERCENTAGE = new BigDecimal("0.005"); // 0.5% de frais
+	
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+	@Autowired
+	private AppWalletService appWalletService;
 
 	public List<Transaction> getAll() {
 		return transactionRepository.findAll();
@@ -40,7 +45,8 @@ public class TransactionService {
 		DBUser receiver = userRepository.findById(transactionDTO.getReceiverId())
 				.orElseThrow(() -> new IllegalArgumentException("Receiver not found"));
 
-		BigDecimal totalAmount = transactionDTO.getAmount().add(transactionDTO.getFee());
+		BigDecimal fee = transactionDTO.getAmount().multiply(FEE_PERCENTAGE);
+		BigDecimal totalAmount = transactionDTO.getAmount().add(fee);
 
 		if (sender.getBalance().compareTo(totalAmount) < 0) {
 			throw new IllegalArgumentException("Fonds insuffisant");
@@ -48,6 +54,7 @@ public class TransactionService {
 
 		sender.setBalance(sender.getBalance().subtract(totalAmount));
 		receiver.setBalance(receiver.getBalance().add(transactionDTO.getAmount()));
+		appWalletService.addFee(fee);
 
 		userRepository.save(sender);
 		userRepository.save(receiver);
@@ -57,7 +64,7 @@ public class TransactionService {
 		transaction.setReceiver(receiver);
 		transaction.setDescription(transactionDTO.getDescription());
 		transaction.setAmount(transactionDTO.getAmount());
-		transaction.setFee(transactionDTO.getFee());
+		transaction.setFee(fee);
 		transaction.setTimestamp(LocalDateTime.now());
 
 		return transactionRepository.save(transaction);
