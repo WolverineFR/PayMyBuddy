@@ -49,9 +49,5 @@ public class TransactionController {
 		return transactionService.editTransaction(id, transaction);
 	}
 	
-	@DeleteMapping("/{id}")
-	public void deleteTransaction(@PathVariable Integer id) {
-		transactionService.deleteTransaction(id);
-	}
 	
 }
