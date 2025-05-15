@@ -57,4 +57,10 @@ public class UserController {
 	public void deleteUser(@PathVariable Integer id) {
 		userService.deleteUserById(id);
 	}
+
+	@PutMapping("/{id}/add/{friendId}")
+	public Optional<UserDTO> addFriend(@PathVariable Integer id, @PathVariable int friendId) {
+		return userService.addFriend(id, friendId).map(user -> new UserDTO(user));
+	}
+
 }

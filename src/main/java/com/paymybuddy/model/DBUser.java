@@ -46,7 +46,7 @@ public class DBUser {
 	@JsonManagedReference("receivedTransactions")
 	private List<Transaction> receivedTransactions = new ArrayList<>();
 
-	@OneToMany
+	@ManyToMany
 	@JoinTable(name = "user_friend", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
 	private List<DBUser> friends = new ArrayList<>();
 
