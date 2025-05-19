@@ -27,8 +27,6 @@ public class TransactionService {
 	@Autowired
 	private TransactionRepository transactionRepository;
 	
-	@Autowired
-	private AppWalletService appWalletService;
 
 	public List<Transaction> getAll() {
 		return transactionRepository.findAll();
@@ -54,7 +52,6 @@ public class TransactionService {
 
 		sender.setBalance(sender.getBalance().subtract(totalAmount));
 		receiver.setBalance(receiver.getBalance().add(transactionDTO.getAmount()));
-		appWalletService.addFee(fee);
 
 		userRepository.save(sender);
 		userRepository.save(receiver);
@@ -70,10 +67,4 @@ public class TransactionService {
 		return transactionRepository.save(transaction);
 	}
 
-	public Optional<Transaction> editTransaction(int id, Transaction transaction) {
-		return transactionRepository.findById(id).map(t -> {
-			t.setDescription(transaction.getDescription());
-			return transactionRepository.save(t);
-		});
-	}
 }

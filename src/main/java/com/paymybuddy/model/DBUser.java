@@ -37,6 +37,9 @@ public class DBUser {
 	
 	@Column(name="balance")
 	private BigDecimal balance = BigDecimal.ZERO;
+	
+	@Column(name="role")
+	private String role;
 
 	@OneToMany(mappedBy = "sender")
 	@JsonManagedReference("sentTransactions")
@@ -54,12 +57,13 @@ public class DBUser {
 
 	}
 
-	public DBUser(int id, String username, String email, String password, BigDecimal balance) {
+	public DBUser(int id, String username, String email, String password, BigDecimal balance, String role) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.balance = balance;
+		this.role = role;
 
 	}
 
@@ -128,5 +132,15 @@ public class DBUser {
 	public void setFriends(List<DBUser> friends) {
 		this.friends = friends;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
 
 }

@@ -3,7 +3,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS user_friend;
 DROP TABLE IF EXISTS db_transaction;
 DROP TABLE IF EXISTS db_user;
-DROP TABLE IF EXISTS app_wallet;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -12,7 +11,8 @@ CREATE TABLE db_user (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    balance DECIMAL(10,2) DEFAULT 0
+    balance DECIMAL(10,2) DEFAULT 0,
+    role VARCHAR(20) NOT NULL DEFAULT 'USER'
 );
 
 CREATE TABLE db_transaction (
@@ -35,10 +35,3 @@ CREATE TABLE user_friend (
     FOREIGN KEY (friend_id) REFERENCES db_user(id)
 );
 
-CREATE TABLE app_wallet (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    transaction_id INT NOT NULL,
-    fee_amount DECIMAL(10,2) NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (transaction_id) REFERENCES db_transaction(id)
-);

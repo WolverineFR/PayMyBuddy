@@ -44,10 +44,5 @@ public class TransactionController {
 		return transactionService.addTransaction(transactionDTO);
 	}
 	
-	@PutMapping("/{id}")
-	public Optional<Transaction> editTransaction (@PathVariable Integer id, @RequestBody Transaction transaction) {
-		return transactionService.editTransaction(id, transaction);
-	}
-	
 	
 }

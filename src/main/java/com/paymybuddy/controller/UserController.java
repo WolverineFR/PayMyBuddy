@@ -44,7 +44,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public DBUser saveUser(@RequestBody DBUser user) {
+	public DBUser addUser(@RequestBody DBUser user) {
 		return userService.addUser(user);
 	}
 
