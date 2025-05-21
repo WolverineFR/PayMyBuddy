@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.UserRepository;
@@ -19,21 +20,26 @@ public class LoginController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	/*
 	@GetMapping("/login")
-	public String showLoginPage() {
-		return "login";
+	public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+	    if (error != null) {
+	        model.addAttribute("loginError", "Identifiants invalides");
+	    }
+	    return "login";
 	}
 
-	*/
 	
 	@GetMapping("/user")
 	public String getUserPage(Authentication authentication, Model model) {
+	    if (authentication == null || !authentication.isAuthenticated()) {
+	        return "redirect:/login";
+	    }
 	    String username = authentication.getName();
 	    DBUser user = userRepository.findByUsername(username);
 	    model.addAttribute("user", user);
 	    return "user";
 	}
+
 
 	
 	/*
