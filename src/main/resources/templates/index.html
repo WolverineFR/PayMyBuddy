@@ -15,16 +15,20 @@
 			<a href="/login">Se connecter</a>
 			<a href="/register">S'inscrire</a>
 		</nav>
-		</header>
-		<main>
-			<div class="logoBox">
-				<img src="https://user.oc-static.com/upload/2024/05/20/17162226887581_P6-01_Pay%20My%20Buddy.png"
-					alt="logo">
-			</div>
-		</main>
-		<footer>
-			<p>2025</p>
-		</footer>
+		<nav sec:authorize="isAuthenticated()">
+			<a href="/user">Profil</a>
+			<a href="/logout">Se déconnecter</a>
+		</nav>
+	</header>
+	<main>
+		<div class="logoBox">
+			<img src="https://user.oc-static.com/upload/2024/05/20/17162226887581_P6-01_Pay%20My%20Buddy.png"
+				alt="logo">
+		</div>
+	</main>
+	<footer>
+		<p>2025</p>
+	</footer>
 </body>
 
 </html>
