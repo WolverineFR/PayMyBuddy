@@ -7,6 +7,5 @@ import com.paymybuddy.model.DBUser;
 
 @Repository
 public interface UserRepository extends JpaRepository<DBUser, Integer> {
-	public DBUser findByUsername (String username);
 	public DBUser findByEmail (String email);
 }

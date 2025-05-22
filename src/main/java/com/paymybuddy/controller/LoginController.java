@@ -34,12 +34,11 @@ public class LoginController {
 	    if (authentication == null || !authentication.isAuthenticated()) {
 	        return "redirect:/login";
 	    }
-	    String username = authentication.getName();
-	    DBUser user = userRepository.findByUsername(username);
+	    String email = authentication.getName();
+	    DBUser user = userRepository.findByEmail(email);
 	    model.addAttribute("user", user);
 	    return "user";
 	}
-
 
 	
 	/*
