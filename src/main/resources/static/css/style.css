@@ -47,8 +47,8 @@ main {
 	width: 100%;
 	min-height: calc(100vh - 130px);
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
 }
 
 .logoBox {
@@ -70,4 +70,68 @@ footer {
 	align-items: center;
 	justify-content: center;
 	margin:auto;
+}
+
+/* page Login */
+
+.formBox {
+	border: solid black 1px;
+	width: 500px;
+	height: 680px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	margin: 20px 0 20px 0;
+	flex-direction: column;
+	box-shadow: 0px 4px 4px 0px #00000040;
+	
+}
+
+.formBox h2 {
+	background-color:#F69F1D;
+	font-family: Inter;
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 150%;
+	vertical-align: middle;
+	color: white;
+	padding: 14px 24px 14px 24px;
+	border-radius: 8px;
+	text-align: center;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 70px;
+}
+
+.btn {
+	text-decoration: none;
+		padding: 14px 24px 14px 24px;
+		background-color: #207FEE;
+		color: white;
+		border-radius: 8px;
+		font-family: Inter;
+		font-weight: 700;
+		font-size: 24px;
+		line-height: 150%;
+		vertical-align: middle;
+		border: none;
+		cursor: pointer;
+
+}
+
+.inputStyle {
+	width: 295px;
+	height: 60px;
+	border-radius: 8px;
+	padding: 12px 16px 12px 16px;
+	border-width: 1px;
+	border: solid #E0E0E0 1px;
+	font-size: 24px;
+	font-weight: 700;
+	color: #828282;
+
 }

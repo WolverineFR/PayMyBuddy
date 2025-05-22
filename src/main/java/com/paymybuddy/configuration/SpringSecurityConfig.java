@@ -27,16 +27,10 @@ public class SpringSecurityConfig {
 				.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/", "/index.html", "/login", "/register", "/css/**")
 								.permitAll()
-								.requestMatchers("/user").hasRole("USER")
-								.requestMatchers("/user").hasRole("ADMIN")
+								.requestMatchers("/user").hasAnyRole("USER","ADMIN")
 								.anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/user", true).failureUrl("/login?error=true").permitAll())
+				.formLogin(form -> form.loginPage("/login") .usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/user", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")).build();
-	}
-
-	@Bean
-	public UserDetailsService users() {
-		return customUserDetailsService;
 	}
 
 	@Bean

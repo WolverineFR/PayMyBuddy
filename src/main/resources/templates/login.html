@@ -14,22 +14,27 @@
 		<a href="/register">S'inscrire</a>
 	</header>
 	<main>
-		<form th:action="@{/login}" method="post">
-			<div>
-				<label for="username">Nom d'utilisateur :</label>
-				<input type="text" id="username" name="username" required />
-			</div>
-			<div>
-				<label for="password">Mot de passe :</label>
-				<input type="password" id="password" name="password" required />
-			</div>
-			<div>
-				<button type="submit">Se connecter</button>
-			</div>
-			<div th:if="${loginError}">
-				<p style="color:red;">Identifiants invalides</p>
-			</div>
-		</form>
+		<div class="formBox">
+			
+			<form th:action="@{/login}" method="post">
+				<h2>Pay My Buddy</h2>
+				<div>
+					<label for="email"></label>
+					<input class="inputStyle" type="text" id="email" name="email" placeholder="Mail" required />
+				</div>
+				<div>
+					<label for="password"></label>
+					<input class="inputStyle" type="password" id="password" name="password" placeholder="Mot de passe"
+						required />
+				</div>
+				<div>
+					<button class="btn" type="submit">Se connecter</button>
+				</div>
+				<div th:if="${loginError}">
+					<p style="color:red;">Identifiants invalides</p>
+				</div>
+			</form>
+		</div>
 	</main>
 	<footer>
 		<p>2025</p>

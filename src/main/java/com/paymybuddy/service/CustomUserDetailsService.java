@@ -16,23 +16,22 @@ import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.UserRepository;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService{
+public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		DBUser user = userRepository.findByUsername(username);
-		
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		DBUser user = userRepository.findByEmail(email);
+
 		if (user == null) {
-			throw new UsernameNotFoundException("User not found with username: " + username);
+			throw new UsernameNotFoundException("User not found with username: " + email);
 		}
-		
-		return new User(user.getUsername(),user.getPassword(),getGrantedAuthorities(user.getRole()));
-	//	return User.builder().username(user.getUsername()).password(user.getPassword()).authorities(user.getRole()).build();
+
+		return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user.getRole()));
 	}
-	
+
 	private List<GrantedAuthority> getGrantedAuthorities(String role) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
