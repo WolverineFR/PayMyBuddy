@@ -72,6 +72,14 @@ footer {
 	margin:auto;
 }
 
+.succesMessage {
+	color: green;
+}
+
+.errorMessage {
+	color: red;
+}
+
 /* page Login */
 
 .formBox {

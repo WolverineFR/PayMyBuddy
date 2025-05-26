@@ -31,7 +31,7 @@
                     <button class="btn" type="submit">S'inscrire</button>
                 </div>
                 <div th:if="${registrationError}">
-                    <p style="color:red;">[[${registrationError}]]</p>
+                    <p class="errorMessage">[[${registrationError}]]</p>
                 </div>
             </form>
         </div>

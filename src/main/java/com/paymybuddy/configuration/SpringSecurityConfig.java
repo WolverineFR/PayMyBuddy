@@ -1,6 +1,7 @@
 package com.paymybuddy.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class SpringSecurityConfig {
 				.authorizeHttpRequests(
 						auth -> auth.requestMatchers("/", "/index.html", "/login", "/register", "/css/**")
 								.permitAll()
-								.requestMatchers("/user").hasAnyRole("USER","ADMIN")
+								.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
 								.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login") .usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/user", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")).build();
@@ -49,10 +50,10 @@ public class SpringSecurityConfig {
 	}
 
 	/*
-	 * @Bean CommandLineRunner generatePassword() { return args -> {
-	 * BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); String password
-	 * = "jaimelesfleurs"; String hashed = encoder.encode(password);
-	 * System.out.println("Mot de passe chiffré : " + hashed); }; }
-	 */
-
+	  @Bean CommandLineRunner generatePassword() { return args -> {
+	  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); String password
+	  = "admin"; String hashed = encoder.encode(password);
+	  System.out.println("Mot de passe chiffré : " + hashed); }; }
+	 
+*/
 }

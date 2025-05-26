@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un ami</title>
+</head>
+<body>
+    <header>
+        <h1>Ajouter un ami</h1>
+        <a href="/user">Retour au profil</a>
+    </header>
+
+    <main>
+        <form th:action="@{/user/add-friend}" method="post">
+            <label for="email">Email de l'ami :</label>
+            <input type="email" id="email" name="email" required />
+            <button type="submit">Ajouter</button>
+        </form>
+
+        <p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
+        <p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+    </main>
+</body>
+</html>
