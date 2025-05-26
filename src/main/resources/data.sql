@@ -10,5 +10,5 @@ INSERT INTO db_transaction (sender_id, receiver_id, description, amount, fee) VA
 (1, 2, 'Cadeau de noel', 20.00, 0.10);
 
 
-UPDATE db_user SET balance = balance - 20.00 WHERE id = 1;
-UPDATE db_user SET balance = balance + 19.90 WHERE id = 2;
+UPDATE db_user SET balance = balance - 20.10 WHERE id = 1;
+UPDATE db_user SET balance = balance + 20.00 WHERE id = 2;

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+		<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <title>Transférer</title>
+</head>
+<body>
+    <header>
+        <h1>Transaction</h1>
+        <a href="/user">Retour au profil</a>
+    </header>
+
+    <main>
+        <form th:action="@{/user/transaction}" method="post">
+            <label for="email-select"></label>
+			<select name="friendEmail" id="email-select" required>
+				<option value="" disabled selected>Sélectionnez une relation</option>
+				<option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.email}" ></option>
+			</select>
+            <input type="text" id="description" name="description" />
+			<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}" required/>
+            <button type="submit">Payer</button>
+        </form>
+
+        <p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
+        <p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+		
+		
+    </main>
+</body>
+</html>
