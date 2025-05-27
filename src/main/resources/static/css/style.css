@@ -69,10 +69,8 @@ main {
 	margin: auto;
 	height: 100%;
 	width: 100%;
-	min-height: calc(100vh - 130px);
 	display: flex;
 	justify-content: center;
-	align-items: center;
 }
 
 .logoBox {
@@ -170,6 +168,30 @@ footer {
 
 /* Page transaction */
 
+.transactionPage {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	max-width: 1440px;
+}
+
+.form-Box {
+	padding: 0;
+	margin: 0 auto;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.transactionForm {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-right: 80px;
+}
+
 #email-select {
 	width: 399px;
 	height: 81px;
@@ -181,6 +203,7 @@ footer {
 	font-weight: 400;
 	font-size: 24px;
 	line-height: 24px;
+	box-sizing: border-box;
 
 }
 
@@ -196,6 +219,7 @@ footer {
 	font-size: 24px;
 	line-height: 24px;
 	box-shadow: 0px 1px 2px 0px #0000000D;
+	box-sizing: border-box;
 
 }
 
@@ -210,6 +234,7 @@ footer {
 		font-weight: 400;
 		font-size: 24px;
 		line-height: 24px;
+		box-sizing: border-box;
 
 }
 
@@ -225,6 +250,6 @@ footer {
 	font-size: 16px;
 	line-height: 150%;
 	vertical-align: middle;
-
+	box-sizing: border-box;
 
 }
