@@ -4,6 +4,17 @@
     <title>Profil utilisateur</title>
 </head>
 <body>
+	<header>
+			<div class="headerBox">
+			<h1>Pay My Buddy</h1>
+			<nav class="navigationBox">
+				<a href="/user/transaction">Transférer</a>
+				<a class="activeBtn" href="/user">Profil</a>
+				<a href="/user/add-friend">Ajouter relation</a>
+				<a href="/logout">Se déconnecter</a>
+			</nav>
+			</div>
+		</header>
     <h1>Bonjour <span th:text="${user.username}"></span></h1>
     <p>Email : <span th:text="${user.email}"></span></p>
 </body>

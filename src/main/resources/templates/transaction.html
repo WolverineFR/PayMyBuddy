@@ -1,33 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-		<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <title>Transférer</title>
-</head>
-<body>
-    <header>
-        <h1>Transaction</h1>
-        <a href="/user">Retour au profil</a>
-    </header>
 
-    <main>
-        <form th:action="@{/user/transaction}" method="post">
-            <label for="email-select"></label>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>Transférer</title>
+</head>
+
+<body>
+	<header>
+		<div class="headerBox">
+		<h1>Pay My Buddy</h1>
+		<nav class="navigationBox">
+			<a class="activeBtn" href="/user/transaction">Transférer</a>
+			<a href="/user">Profil</a>
+			<a href="/user/add-friend">Ajouter relation</a>
+			<a href="/logout">Se déconnecter</a>
+		</nav>
+		</div>
+	</header>
+
+	<main>
+		<form th:action="@{/user/transaction}" method="post">
+			<label for="email-select"></label>
 			<select name="friendEmail" id="email-select" required>
 				<option value="" disabled selected>Sélectionnez une relation</option>
-				<option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.email}" ></option>
+				<option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.email}"></option>
 			</select>
-            <input type="text" id="description" name="description" />
-			<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}" required/>
-            <button type="submit">Payer</button>
-        </form>
+			<input type="text" id="description" name="description" />
+			<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}" required />
+			<button class="btn sendBtn" type="submit">Payer</button>
+		</form>
 
-        <p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
-        <p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-		
-		
-    </main>
+		<p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
+		<p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+		<table>
+			<caption>Transaction</caption>
+			<tr>
+				<td>Relations</td>
+				<td>Description</td>
+				<td>Montant</td>
+			</tr>
+			<tr th:each="transaction : ${transactions}">
+				<td th:text="${transaction.receiver.username}"></td>
+				<td th:text="${transaction.description}"></td>
+				<td th:text="${transaction.amount}+'€'"></td>
+			</tr>
+		</table>
+	</main>
 </body>
+
 </html>

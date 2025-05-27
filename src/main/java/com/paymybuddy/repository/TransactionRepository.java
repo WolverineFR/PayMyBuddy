@@ -7,5 +7,4 @@ import com.paymybuddy.model.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer>{
-
 }

@@ -3,6 +3,7 @@ package com.paymybuddy.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
@@ -31,6 +33,19 @@ public class SendTransactionController {
 	public String showTransactionPage(Authentication auth, Model model) {
 		String currentUserEmail = auth.getName();
 		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
+		int userId = currentUser.getId();
+		List<Transaction> transactions = transactionRepository.findAll();
+		List<Transaction> userTransactions = new ArrayList<>();
+
+		for (Transaction transaction : transactions) {
+			DBUser senderUser = transaction.getSender();
+
+			if (senderUser.getId() == userId) {
+				userTransactions.add(transaction);
+			}
+		}
+
+		model.addAttribute("transactions", userTransactions);
 
 		List<DBUser> friends = currentUser.getFriends();
 		BigDecimal balance = currentUser.getBalance();
@@ -43,7 +58,7 @@ public class SendTransactionController {
 	@PostMapping("/user/transaction")
 	public String sendTransaction(@RequestParam("friendEmail") String friendEmail,
 			@RequestParam(required = false) String description, @RequestParam BigDecimal amount, Authentication auth,
-			Model model) {
+			RedirectAttributes redirectAttributes) {
 
 		String senderEmail = auth.getName();
 		DBUser sender = userRepository.findByEmail(senderEmail);
@@ -53,12 +68,10 @@ public class SendTransactionController {
 		BigDecimal fees = amount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
 
 		BigDecimal totalDebit = amount.add(fees);
-		
-		model.addAttribute("friends", sender.getFriends());
-		model.addAttribute("balance", sender.getBalance());
 
 		if (sender.getBalance().compareTo(totalDebit) < 0) {
-			model.addAttribute("errorMessage", "Fonds insuffisants. Vous devez avoir au moins " + totalDebit + " € pour pouvoir payer les frais de transaction.");
+			redirectAttributes.addFlashAttribute("errorMessage", "Fonds insuffisants. Il vous manque "
+					+ fees + " € pour pouvoir payer les frais de transaction.");
 
 		} else {
 
@@ -77,9 +90,9 @@ public class SendTransactionController {
 			userRepository.save(sender);
 			userRepository.save(receiver);
 
-			model.addAttribute("successMessage", "Montant envoyé avec succès !");
+			redirectAttributes.addFlashAttribute("successMessage", "Montant envoyé avec succès !");
 
 		}
-		return "transaction";
+		return "redirect:/user/transaction";
 	}
 }
