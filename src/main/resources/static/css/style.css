@@ -368,3 +368,27 @@ tbody tr {
 	margin-top: 40px;
 
 }
+
+/* Page profil */
+
+.userPage form {
+	font-family: Inter;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 140%;
+
+}
+
+.userPage form input {
+	font-family: Inter;
+		font-weight: 400;
+		font-size: 20px;
+		line-height: 140%;
+		border: none;
+		width: 57%;
+		
+}
+
+.userPage button {
+	background-color: #F69F1D;
+}

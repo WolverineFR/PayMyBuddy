@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <title>Profil utilisateur</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>Profil</title>
 </head>
+
 <body>
 	<header>
-			<div class="headerBox">
+		<div class="headerBox">
 			<h1>Pay My Buddy</h1>
 			<nav class="navigationBox">
 				<a href="/user/transaction">Transférer</a>
@@ -13,9 +18,36 @@
 				<a href="/user/add-friend">Ajouter relation</a>
 				<a href="/logout">Se déconnecter</a>
 			</nav>
-			</div>
-		</header>
-    <h1>Bonjour <span th:text="${user.username}"></span></h1>
-    <p>Email : <span th:text="${user.email}"></span></p>
+		</div>
+	</header>
+	<main>
+		<div class="userPage">
+			<form>
+				<div>
+					<label for="username">Username</label>
+					<input class="inputStyle" type="text" id="username" name="username" th:value="${user.username}" th:placeholder="'@'+${user.username}+'    >'"
+						required />
+				</div>
+				<div>
+					<label for="email">Mail</label>
+					<input class="inputStyle" type="email" id="email" name="email" th:value="${user.email}" th:placeholder="${user.email}+' >'" required />
+				</div>
+				<div>
+					<label for="password">Mot de passe</label>
+					<input class="inputStyle" type="password" id="password" name="password" placeholder="***********     >"
+						required />
+				</div>
+				<div>
+					<button class="btn" type="submit">Modifier</button>
+				</div>
+				<div th:if="${registrationError}">
+					<p class="errorMessage">[[${registrationError}]]</p>
+				</div>
+			</form>
+		</div>
+
+	</main>
+
 </body>
+
 </html>
