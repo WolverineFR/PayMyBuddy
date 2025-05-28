@@ -96,10 +96,13 @@ footer {
 
 .succesMessage {
 	color: green;
+	font-size: 20px;
+	
 }
 
 .errorMessage {
 	color: red;
+	font-size: 20px;
 }
 
 /* page Login */
@@ -176,6 +179,7 @@ footer {
 	display: flex;
 	flex-direction: column;
 	max-width: 1440px;
+	gap: 70px;
 }
 
 .form-Box {
@@ -252,4 +256,57 @@ margin-right: 80px;
 	vertical-align: middle;
 	box-sizing: border-box;
 
+}
+
+.tableBox {
+	width: 87%;
+	height: 100%;
+	min-height: 426px;
+	border-radius: 8px;
+	border-width: 1px;
+	border: 1px solid #E0E0E0;
+	box-shadow: 0px 4px 12px 0px #0000000A;
+	padding: 20px;
+	margin-left: 70px;
+	margin-bottom: 50px;
+
+}
+
+.tableBox h2 {
+	font-family: Inter;
+	font-weight: 600;
+	font-size: 24px;
+	line-height: 150%;
+
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th {
+	font-family: Inter;
+	font-weight: 600;
+	font-size: 24px;
+	line-height: 150%;
+	padding: 10px 0 10px 0;
+
+}
+
+td {
+	font-family: Inter;
+	font-weight: 500;
+	font-size: 24px;
+	line-height: 150%;
+	padding: 10px 0 10px 0;
+
+}
+
+tbody tr {
+	border-top: 1px solid #E0E0E0;
+}
+
+.succesMessage, .errorMessage {
+	margin-left: 80px;
 }

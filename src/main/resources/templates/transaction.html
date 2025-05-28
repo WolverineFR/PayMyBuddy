@@ -40,19 +40,30 @@
 			<p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
 			<p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
+			<div class="tableBox">
+				<h2>Mes Transactions</h2>
 			<table>
-				<caption>Transaction</caption>
-				<tr>
-					<td>Relations</td>
-					<td>Description</td>
-					<td>Montant</td>
-				</tr>
-				<tr th:each="transaction : ${transactions}">
-					<td th:text="${transaction.receiver.username}"></td>
-					<td th:text="${transaction.description}"></td>
-					<td th:text="${transaction.amount}+'€'"></td>
-				</tr>
+				<colgroup>
+				    <col style="width: 45%;">
+				    <col style="width: 45%;">
+				    <col style="width: 10%;">
+				  </colgroup>
+				<thead>
+					<tr>
+						<th style="text-align: left;">Relations</th>
+						<th style="text-align: left;">Description</th>
+						<th style="text-align: end;">Montant</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="transaction : ${transactions}">
+						<td style="text-align: left;" th:text="${transaction.receiver.username}"></td>
+						<td style="text-align: left;"th:text="${transaction.description}"></td>
+						<td style="text-align: end;"th:text="${transaction.amount}+'€'"></td>
+					</tr>
+				</tbody>
 			</table>
+			</div>
 		</div>
 	</main>
 </body>
