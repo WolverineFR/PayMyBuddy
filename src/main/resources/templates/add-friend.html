@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-		<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <title>Ajouter un ami</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>Ajouter un ami</title>
 </head>
+
 <body>
 	<header>
-			<div class="headerBox">
+		<div class="headerBox">
 			<h1>Pay My Buddy</h1>
 			<nav class="navigationBox">
 				<a href="/user/transaction">Transférer</a>
@@ -16,18 +18,23 @@
 				<a class="activeBtn" href="/user/add-friend">Ajouter relation</a>
 				<a href="/logout">Se déconnecter</a>
 			</nav>
-			</div>
-		</header>
+		</div>
+	</header>
 
-    <main>
-        <form th:action="@{/user/add-friend}" method="post">
-            <label for="email">Email de l'ami :</label>
-            <input type="email" id="email" name="email" required />
-            <button type="submit">Ajouter</button>
-        </form>
+	<main>
+		<div class="AddFriendPage">
+			<form th:action="@{/user/add-friend}" method="post">
+				<div class="formFriendBox">
+					<label for="email">Chercher une relation</label>
+					<input type="email" id="email" name="email" placeholder="Saisir une adresse mail" required />
+				</div>
+				<button class="addFriendBtn" type="submit">Ajouter</button>
+			</form>
+			<p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
+			<p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+		</div>
 
-        <p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
-        <p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-    </main>
+	</main>
 </body>
+
 </html>

@@ -310,3 +310,61 @@ tbody tr {
 .succesMessage, .errorMessage {
 	margin-left: 80px;
 }
+
+/* Page ajouter ami */
+
+.AddFriendPage {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	margin-top: 80px;
+}
+
+.AddFriendPage form {
+	display: flex;
+	gap: 10px;
+}
+
+.formFriendBox {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.formFriendBox input {
+	width: 484px;
+	height: 54px;
+	border-radius: 8px;
+	border-width: 1px;
+	padding: 12px 16px 12px 16px;
+	border: 1px solid #E0E0E0;
+	box-shadow: 0px 1px 2px 0px #0000000D;
+	font-family: Inter;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 150%;
+}
+
+.formFriendBox label {
+	font-family: Inter;
+	font-weight: 500;
+	font-size: 20px;
+	line-height: 150%;
+
+}
+.addFriendBtn {
+	width: 151px;
+	height: 62px;
+	border-radius: 8px;
+	background: #F69F1D;
+	box-shadow: 0px 1px 2px 0px #0000000D;
+	font-family: Inter;
+	font-weight: 500;
+	font-size: 24px;
+	line-height: 150%;
+	color: white;
+	border: none;
+	cursor: pointer;
+	margin-top: 40px;
+
+}
