@@ -1,43 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Créer un compte</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>Créer un compte</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header>
-        <h1>Pay My Buddy</h1>
-        <a href="/login">Se connecter</a>
-    </header>
-    <main>
-        <div class="formBox">
-            <h2>Pay My Buddy</h2>
-            <form class="formLog" th:action="@{/register}" method="post">
-                <div>
-                    <label for="username"></label>
-                    <input class="inputStyle" type="text" id="username" name="username" placeholder="Nom d'utilisateur" required />
-                </div>
-                <div>
-                    <label for="email"></label>
-                    <input class="inputStyle" type="email" id="email" name="email" placeholder="Email" required />
-                </div>
-                <div>
-                    <label for="password"></label>
-                    <input class="inputStyle" type="password" id="password" name="password" placeholder="Mot de passe" required />
-                </div>
-                <div>
-                    <button class="btn" type="submit">S'inscrire</button>
-                </div>
-                <div th:if="${registrationError}">
-                    <p class="errorMessage">[[${registrationError}]]</p>
-                </div>
-            </form>
-        </div>
-    </main>
-    <footer>
-        <p>2025</p>
-    </footer>
+	<header>
+		<div class="headerBox">
+			<h1>Pay My Buddy</h1>
+			<nav class="navigationBox">
+				<a href="/login">Se connecter</a>
+			</nav>
+		</div>
+	</header>
+	<main>
+		<div class="formBox">
+			<h2>Pay My Buddy</h2>
+			<form class="formLog" th:action="@{/register}" method="post">
+				<div>
+					<label for="username"></label>
+					<input class="inputStyle" type="text" id="username" name="username" placeholder="Nom d'utilisateur"
+						required />
+				</div>
+				<div>
+					<label for="email"></label>
+					<input class="inputStyle" type="email" id="email" name="email" placeholder="Email" required />
+				</div>
+				<div>
+					<label for="password"></label>
+					<input class="inputStyle" type="password" id="password" name="password" placeholder="Mot de passe"
+						required />
+				</div>
+				<div>
+					<button class="btn" type="submit">S'inscrire</button>
+				</div>
+				<div th:if="${registrationError}">
+					<p class="errorMessage">[[${registrationError}]]</p>
+				</div>
+			</form>
+		</div>
+	</main>
+	<footer>
+		<p>2025</p>
+	</footer>
 </body>
+
 </html>

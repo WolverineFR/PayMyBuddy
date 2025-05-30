@@ -14,7 +14,7 @@
 			<h1>Pay My Buddy</h1>
 			<nav class="navigationBox">
 				<a href="/user/transaction">Transférer</a>
-				<a class="activeBtn" href="/user">Profil</a>
+				<a class="activeBtn" href="/user/profil">Profil</a>
 				<a href="/user/add-friend">Ajouter relation</a>
 				<a href="/logout">Se déconnecter</a>
 			</nav>
@@ -22,7 +22,7 @@
 	</header>
 	<main>
 		<div class="userPage">
-			<form>
+			<form th:action="@{/user/profil}" method="post">
 				<div>
 					<label for="username">Username</label>
 					<input class="inputStyle" type="text" id="username" name="username" th:value="${user.username}" th:placeholder="'@'+${user.username}+'    >'"
@@ -40,8 +40,11 @@
 				<div>
 					<button class="btn" type="submit">Modifier</button>
 				</div>
-				<div th:if="${registrationError}">
-					<p class="errorMessage">[[${registrationError}]]</p>
+				<div th:if="${successMessage}">
+				    <p class="succesMessage" th:text="${successMessage}"></p>
+				</div>
+				<div th:if="${updateError}">
+					<p class="errorMessage">[[${updateError}]]</p>
 				</div>
 			</form>
 		</div>

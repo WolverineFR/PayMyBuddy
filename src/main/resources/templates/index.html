@@ -10,15 +10,19 @@
 
 <body>
 	<header>
+		<div class="headerBox">
 		<h1>Pay My Buddy</h1>
-		<nav sec:authorize="!isAuthenticated()">
+		<nav class="navigationBox" sec:authorize="!isAuthenticated()">
 			<a href="/login">Se connecter</a>
 			<a href="/register">S'inscrire</a>
 		</nav>
-		<nav sec:authorize="isAuthenticated()">
-			<a href="/user">Profil</a>
+		<nav class="navigationBox" sec:authorize="isAuthenticated()">
+			<a href="/user/transaction">Transférer</a>
+			<a href="/user/profil">Profil</a>
+			<a href="/user/add-friend">Ajouter relation</a>
 			<a href="/logout">Se déconnecter</a>
 		</nav>
+		</div>
 	</header>
 	<main>
 		<div class="logoBox">

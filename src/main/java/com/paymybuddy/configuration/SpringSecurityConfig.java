@@ -30,7 +30,7 @@ public class SpringSecurityConfig {
 								.permitAll()
 								.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
 								.anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login") .usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/user", true).failureUrl("/login?error=true").permitAll())
+				.formLogin(form -> form.loginPage("/login") .usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")).build();
 	}
 

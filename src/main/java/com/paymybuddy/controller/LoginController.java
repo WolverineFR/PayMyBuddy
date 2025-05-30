@@ -16,9 +16,6 @@ import org.springframework.ui.Model;
 
 @Controller
 public class LoginController {
-
-	@Autowired
-	private UserRepository userRepository;
 	
 	@GetMapping("/login")
 	public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -27,19 +24,6 @@ public class LoginController {
 	    }
 	    return "login";
 	}
-
-	
-	@GetMapping("/user")
-	public String getUserPage(Authentication authentication, Model model) {
-	    if (authentication == null || !authentication.isAuthenticated()) {
-	        return "redirect:/login";
-	    }
-	    String email = authentication.getName();
-	    DBUser user = userRepository.findByEmail(email);
-	    model.addAttribute("user", user);
-	    return "user";
-	}
-
 	
 	/*
 	 * private OAuth2AuthorizedClientService authorizedClientService;
@@ -61,18 +45,6 @@ public class LoginController {
 		}
 	}
 */
-	/*
-	 * 
-	 * @PostMapping("/register") public ResponseEntity<?> registerUser(@RequestBody
-	 * DBUser user) { if (userRepository.findByUsername(user.getUsername()) != null)
-	 * { return ResponseEntity.badRequest().body("Username already exists"); }
-	 * 
-	 * if (userRepository.findByEmail(user.getEmail()) != null) { return
-	 * ResponseEntity.badRequest().body("Email already exists"); } DBUser newUser =
-	 * userSerice.addUser(user); return
-	 * ResponseEntity.status(HttpStatus.CREATED).body(newUser); }
-	 * 
-	 */
 
 
 

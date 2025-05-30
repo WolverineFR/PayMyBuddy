@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
@@ -94,5 +95,10 @@ public class SendTransactionController {
 
 		}
 		return "redirect:/user/transaction";
+	}
+	
+	@GetMapping("/user/transaction/")
+	public RedirectView redirectTransactionWithSlash() {
+	    return new RedirectView("/user/transaction");
 	}
 }
