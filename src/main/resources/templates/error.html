@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>PayMyBuddy</title>
+</head>
+
+<body>
+	<header>
+		<div class="headerBox">
+		<h1>Pay My Buddy</h1>
+		<nav class="navigationBox" sec:authorize="!isAuthenticated()">
+			<a href="/login">Se connecter</a>
+			<a href="/register">S'inscrire</a>
+		</nav>
+		<nav class="navigationBox" sec:authorize="isAuthenticated()">
+			<a href="/user/transaction">Transférer</a>
+			<a href="/user/profil">Profil</a>
+			<a href="/user/add-friend">Ajouter relation</a>
+			<a href="/logout">Se déconnecter</a>
+		</nav>
+		</div>
+	</header>
+	<main>
+		<div class="errorBox">
+			<h2>Une erreur est survenue</h2>
+			<a href="/" >Cliquez ici pour retourner à la page d'accueil</a>
+		</div>
+	</main>
+	<footer>
+		<p>2025</p>
+	</footer>
+</body>
+
+</html>
