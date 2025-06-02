@@ -24,28 +24,5 @@ public class LoginController {
 	    }
 	    return "login";
 	}
-	
-	/*
-	 * private OAuth2AuthorizedClientService authorizedClientService;
-	 * 
-	 * public LoginController (OAuth2AuthorizedClientService
-	 * authorizedClientService) { this.authorizedClientService =
-	 * authorizedClientService; }
-	 */
-/*
-	@PostMapping("/login")
-	public ResponseEntity<?> loginUser(@RequestBody DBUser user) {
-		try {
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-			String token = jwtService.generateToken(authentication);
-			return ResponseEntity.ok(token);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides");
-		}
-	}
-*/
-
-
 
 }

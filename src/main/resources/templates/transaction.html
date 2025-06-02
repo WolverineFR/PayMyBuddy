@@ -31,8 +31,8 @@
 						<option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.email}">
 						</option>
 					</select>
-					<input type="text" id="description" name="description" />
-					<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}"
+					<input type="text" id="description" name="description" placeholder="Description" />
+					<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}" placeholder="0€"
 						required />
 					<button class="btn sendBtn" type="submit">Payer</button>
 				</form>

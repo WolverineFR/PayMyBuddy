@@ -25,28 +25,31 @@
 			<form th:action="@{/user/profil}" method="post">
 				<div>
 					<label for="username">Username</label>
-					<input class="inputStyle" type="text" id="username" name="username" th:value="${user.username}" th:placeholder="'@'+${user.username}+'    >'"
-						required />
+					<input class="inputStyle" type="text" id="username" name="username" th:value="${user.username}"
+						th:placeholder="'@'+${user.username}+'    >'" required />
 				</div>
 				<div>
 					<label for="email">Mail</label>
-					<input class="inputStyle" type="email" id="email" name="email" th:value="${user.email}" th:placeholder="${user.email}+' >'" required />
+					<input class="inputStyle" type="email" id="email" name="email" th:value="${user.email}"
+						th:placeholder="${user.email}+' >'" required />
 				</div>
 				<div>
 					<label for="password">Mot de passe</label>
-					<input class="inputStyle" type="password" id="password" name="password" placeholder="***********     >"
+					<input class="inputStyle" type="password" id="password" name="password" placeholder="***********"
 						required />
 				</div>
 				<div>
 					<button class="btn" type="submit">Modifier</button>
 				</div>
 				<div th:if="${successMessage}">
-				    <p class="succesMessage" th:text="${successMessage}"></p>
+					<p class="succesMessage" th:text="${successMessage}"></p>
 				</div>
 				<div th:if="${updateError}">
 					<p class="errorMessage">[[${updateError}]]</p>
 				</div>
 			</form>
+			<a sec:authorize="hasRole('ADMIN')" class="btn" style="margin-top: 20px;" href="/admin/profil/balance">Consulter compte</a>
+			<a sec:authorize="hasRole('USER')" class="btn" style="margin-top: 20px;" href="profil/balance">Consulter compte</a>
 		</div>
 
 	</main>

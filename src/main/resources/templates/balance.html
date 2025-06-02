@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>Balance</title>
+</head>
+
+<body>
+	<header>
+		<div class="headerBox">
+			<h1>Pay My Buddy</h1>
+			<nav class="navigationBox">
+				<a href="/user/transaction">Transférer</a>
+				<a class="activeBtn" href="/user/profil">Profil</a>
+				<a href="/user/add-friend">Ajouter relation</a>
+				<a href="/logout">Se déconnecter</a>
+			</nav>
+		</div>
+	</header>
+	<main>
+		<div class="balancePage">
+			<div sec:authorize="hasRole('ADMIN')" class="adminFeesBox soldeBox">
+				<h2>Total des frais collectés</h2>
+				<p th:text="${totalFees} + €"></p>
+			</div>
+			
+			<div sec:authorize="hasRole('USER')" class="soldeBox">
+				<h2>Solde</h2>
+				<p th:text="${balance} + €"></p>
+			</div>
+			<form sec:authorize="hasRole('USER')" th:action="@{/user/profil/balance}" method="post">
+				<label for="amount">Montant :</label>
+				<input class="inputStyle" type="number" name="amount" step="0.01" min="1.00" max="1000" placeholder="0€"
+				 required />
+
+				<button class="btn" id="credit" type="submit" name="action" value="credit">Créditer</button>
+				<button class="btn" id="flow" type="submit" name="action" value="debit">Débiter</button>
+
+				<p class="succesMessage" th:if="${succesMessage}" th:text="${succesMessage}"></p>
+				<p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+			</form>
+
+		</div>
+
+	</main>
+
+</body>
+
+</html>
