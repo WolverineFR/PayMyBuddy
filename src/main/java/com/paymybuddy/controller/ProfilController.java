@@ -1,7 +1,9 @@
 package com.paymybuddy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +49,13 @@ public class ProfilController {
 		currentUser.setPassword(passwordEncoder.encode(password));
 
 		userRepository.save(currentUser);
+		
+		Authentication newAuth = new UsernamePasswordAuthenticationToken(
+	            currentUser.getEmail(), 
+	            currentUser.getPassword(),
+	            auth.getAuthorities()
+	    );
+	    SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		redirectAttributes.addFlashAttribute("successMessage", "Profil mis à jour avec succès.");
 

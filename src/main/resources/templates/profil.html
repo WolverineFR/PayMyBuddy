@@ -48,8 +48,10 @@
 					<p class="errorMessage">[[${updateError}]]</p>
 				</div>
 			</form>
-			<a sec:authorize="hasRole('ADMIN')" class="btn" style="margin-top: 20px;" href="/admin/profil/balance">Consulter compte</a>
-			<a sec:authorize="hasRole('USER')" class="btn" style="margin-top: 20px;" href="profil/balance">Consulter compte</a>
+			<div style="margin-top: 20px;">
+				<a sec:authorize="hasRole('ADMIN')" class="btn" href="/admin/profil/balance">Consulter compte</a>
+				<a sec:authorize="hasRole('USER')" class="btn" href="profil/balance">Consulter compte</a>
+			</div>
 		</div>
 
 	</main>
