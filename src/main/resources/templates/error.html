@@ -11,23 +11,26 @@
 <body>
 	<header>
 		<div class="headerBox">
-		<h1>Pay My Buddy</h1>
-		<nav class="navigationBox" sec:authorize="!isAuthenticated()">
-			<a href="/login">Se connecter</a>
-			<a href="/register">S'inscrire</a>
-		</nav>
-		<nav class="navigationBox" sec:authorize="isAuthenticated()">
-			<a href="/user/transaction">Transférer</a>
-			<a href="/user/profil">Profil</a>
-			<a href="/user/add-friend">Ajouter relation</a>
-			<a href="/logout">Se déconnecter</a>
-		</nav>
+			<h1>Pay My Buddy</h1>
+			<nav class="navigationBox" sec:authorize="!isAuthenticated()">
+				<a href="/login">Se connecter</a>
+				<a href="/register">S'inscrire</a>
+			</nav>
+			<nav class="navigationBox" sec:authorize="isAuthenticated()">
+				<a href="/user/transaction">Transférer</a>
+				<a href="/user/profil">Profil</a>
+				<a href="/user/add-friend">Ajouter relation</a>
+				<form id="logoutForm" action="/logout" method="post" style="display:none;">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				</form>
+				<a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Déconnexion</a>
+			</nav>
 		</div>
 	</header>
 	<main>
 		<div class="errorBox">
 			<h2>Une erreur est survenue</h2>
-			<a href="/" >Cliquez ici pour retourner à la page d'accueil</a>
+			<a href="/">Cliquez ici pour retourner à la page d'accueil</a>
 		</div>
 	</main>
 	<footer>

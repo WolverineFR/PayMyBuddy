@@ -16,7 +16,10 @@
 				<a href="/user/transaction">Transférer</a>
 				<a class="activeBtn" href="/user/profil">Profil</a>
 				<a href="/user/add-friend">Ajouter relation</a>
-				<a href="/logout">Se déconnecter</a>
+				<form id="logoutForm" action="/logout" method="post" style="display:none;">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				</form>
+				<a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Déconnexion</a>
 			</nav>
 		</div>
 	</header>
@@ -26,7 +29,7 @@
 				<h2>Total des frais collectés</h2>
 				<p th:text="${totalFees} + €"></p>
 			</div>
-			
+
 			<div sec:authorize="hasRole('USER')" class="soldeBox">
 				<h2>Solde</h2>
 				<p th:text="${balance} + €"></p>
@@ -34,7 +37,7 @@
 			<form sec:authorize="hasRole('USER')" th:action="@{/user/profil/balance}" method="post">
 				<label for="amount">Montant :</label>
 				<input class="inputStyle" type="number" name="amount" step="0.01" min="1.00" max="1000" placeholder="0€"
-				 required />
+					required />
 
 				<button class="btn" id="credit" type="submit" name="action" value="credit">Créditer</button>
 				<button class="btn" id="flow" type="submit" name="action" value="debit">Débiter</button>
