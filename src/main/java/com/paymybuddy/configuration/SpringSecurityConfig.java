@@ -21,17 +21,15 @@ public class SpringSecurityConfig {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
 				.authorizeHttpRequests(
-						auth -> auth.requestMatchers("/", "/index.html", "/login", "/register", "/css/**","/error")
-								.permitAll()
-								.requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
-								.requestMatchers("/admin/**").hasRole("ADMIN")
-								.anyRequest().authenticated())
-				.formLogin(form -> form.loginPage("/login") .usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/", true).failureUrl("/login?error=true").permitAll())
+						auth -> auth.requestMatchers("/", "/index.html", "/login", "/register", "/css/**", "/error")
+								.permitAll().requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+								.requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+				.formLogin(form -> form.loginPage("/login").usernameParameter("email").passwordParameter("password")
+						.defaultSuccessUrl("/", true).failureUrl("/login?error=true").permitAll())
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")).build();
 	}
 
@@ -51,10 +49,10 @@ public class SpringSecurityConfig {
 	}
 
 	/*
-	  @Bean CommandLineRunner generatePassword() { return args -> {
-	  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); String password
-	  = "admin"; String hashed = encoder.encode(password);
-	  System.out.println("Mot de passe chiffré : " + hashed); }; }
-	 
-*/
+	 * @Bean CommandLineRunner generatePassword() { return args -> {
+	 * BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); String password
+	 * = "admin"; String hashed = encoder.encode(password);
+	 * System.out.println("Mot de passe chiffré : " + hashed); }; }
+	 * 
+	 */
 }
