@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import com.paymybuddy.repository.UserRepository;
 
 @Controller
 public class SendTransactionController {
+
+	private static final Logger logger = LogManager.getLogger(SendTransactionController.class);
 
 	@Autowired
 	UserRepository userRepository;
@@ -62,20 +66,48 @@ public class SendTransactionController {
 			RedirectAttributes redirectAttributes) {
 
 		String senderEmail = auth.getName();
+		logger.info("Début de l'envoi de transaction de {} vers {}", senderEmail, friendEmail);
+
 		DBUser sender = userRepository.findByEmail(senderEmail);
+		if (sender == null) {
+			logger.error("Utilisateur expéditeur introuvable: {}", senderEmail);
+			redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur introuvable.");
+			return "redirect:/user/transaction";
+		}
+		boolean isFriend = sender.getFriends().stream()
+				.anyMatch(friend -> friend.getEmail().equalsIgnoreCase(friendEmail));
+
+		if (!isFriend) {
+			logger.warn("Tentative d'envoi à un utilisateur non ami : {} par {}", friendEmail, senderEmail);
+			redirectAttributes.addFlashAttribute("errorMessage", "Destinataire non valide : doit être un ami.");
+			return "redirect:/user/transaction";
+		}
+
 		DBUser receiver = userRepository.findByEmail(friendEmail);
+		if (receiver == null) {
+			logger.warn("Destinataire introuvable : {}", friendEmail);
+			redirectAttributes.addFlashAttribute("errorMessage", "Destinataire introuvable.");
+			return "redirect:/user/transaction";
+		}
+
+		if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+			logger.warn("Montant invalide : {} envoyé par {}", amount, senderEmail);
+			redirectAttributes.addFlashAttribute("errorMessage", "Montant invalide.");
+			return "redirect:/user/transaction";
+		}
 
 		BigDecimal feeRate = new BigDecimal("0.005");
 		BigDecimal fees = amount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
-
 		BigDecimal totalDebit = amount.add(fees);
 
 		if (sender.getBalance().compareTo(totalDebit) < 0) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Fonds insuffisants. Il vous manque "
-					+ fees + " € pour pouvoir payer les frais de transaction.");
+			logger.warn("Transaction échouée : solde insuffisant pour l'utilisateur {}", senderEmail);
+			redirectAttributes.addFlashAttribute("errorMessage",
+					"Fonds insuffisants. Il vous manque " + fees + " € pour pouvoir payer les frais de transaction.");
+			return "redirect:/user/transaction";
+		}
 
-		} else {
-
+		try {
 			sender.setBalance(sender.getBalance().subtract(totalDebit));
 			receiver.setBalance(receiver.getBalance().add(amount));
 
@@ -86,19 +118,27 @@ public class SendTransactionController {
 			transaction.setAmount(amount);
 			transaction.setTimestamp(LocalDateTime.now());
 			transaction.setFee(fees);
-			transactionRepository.save(transaction);
 
+			transactionRepository.save(transaction);
 			userRepository.save(sender);
 			userRepository.save(receiver);
 
+			logger.info("Transaction enregistrée : {} envoie {} € à {}", senderEmail, amount, friendEmail);
+			logger.info("Frais appliqués : {} €", fees);
+
 			redirectAttributes.addFlashAttribute("successMessage", "Montant envoyé avec succès !");
 
+		} catch (Exception e) {
+			logger.error("Erreur lors de la transaction de {} vers {} : {}", senderEmail, friendEmail, e.getMessage(),
+					e);
+			redirectAttributes.addFlashAttribute("errorMessage", "Erreur interne lors de la transaction.");
 		}
+
 		return "redirect:/user/transaction";
 	}
-	
+
 	@GetMapping("/user/transaction/")
 	public RedirectView redirectTransactionWithSlash() {
-	    return new RedirectView("/user/transaction");
+		return new RedirectView("/user/transaction");
 	}
 }

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -27,12 +29,15 @@ public class DBUser {
 	private int id;
 	
 	@Column(name="username")
+	@NotBlank(message = "Le pseudo ne peut pas être vide.")
 	private String username;
 
 	@Column(unique = true, name = "email")
+	@NotBlank(message = "L'adresse email ne peut pas être vide.")
 	private String email;
 
 	@Column(name="password")
+	@NotBlank(message = "Le mot de passe ne peut pas être vide.")
 	private String password;
 	
 	@Column(name="balance")

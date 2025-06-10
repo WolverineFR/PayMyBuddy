@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import org.springframework.ui.Model;
 
 @Controller
 public class BalancePageController {
+
+	private static final Logger logger = LogManager.getLogger(BalancePageController.class);
 
 	@Autowired
 	UserRepository userRepository;
@@ -47,13 +51,16 @@ public class BalancePageController {
 		if ("credit".equals(action)) {
 			user.setBalance(user.getBalance().add(amount));
 			redirectAttributes.addFlashAttribute("succesMessage", "Compte crédité de " + amount + " €.");
+			logger.info("Le compte {} à bien été crédité de {} €", user.getEmail(), amount);
 		} else if ("debit".equals(action)) {
 			if (user.getBalance().compareTo(amount) < 0) {
 				redirectAttributes.addFlashAttribute("errorMessage", "Fonds insuffisants pour débiter.");
+				logger.warn("Fonds insuffisants pour débiter");
 				return "redirect:balance";
 			}
 			user.setBalance(user.getBalance().subtract(amount));
 			redirectAttributes.addFlashAttribute("succesMessage", "Compte débité de " + amount + " €.");
+			logger.info("Le compte {} a bien été débité de {} €", user.getEmail(), amount);
 		}
 
 		userRepository.save(user);
@@ -61,21 +68,20 @@ public class BalancePageController {
 
 		return "redirect:balance";
 	}
-	
+
 	@GetMapping("/admin/profil/balance")
 	public String showAdminProfil(Model model) {
-	    List<Transaction> allTransaction = transactionRepository.findAll();
-	    BigDecimal totalFees= BigDecimal.ZERO;
-	    
-	    for (Transaction transaction : allTransaction) {
-	    	 if (transaction.getFee() != null) {
-	             totalFees = totalFees.add(transaction.getFee());
-	         }
-	    }
-	    model.addAttribute("totalFees", totalFees);
+		List<Transaction> allTransaction = transactionRepository.findAll();
+		BigDecimal totalFees = BigDecimal.ZERO;
 
-	    return "balance";
+		for (Transaction transaction : allTransaction) {
+			if (transaction.getFee() != null) {
+				totalFees = totalFees.add(transaction.getFee());
+			}
+		}
+		model.addAttribute("totalFees", totalFees);
+
+		return "balance";
 	}
-
 
 }
