@@ -141,6 +141,10 @@ footer {
 	gap: 70px;
 }
 
+.registerForm {
+	gap: 30px;
+}
+
 .btn {
 	text-decoration: none;
 	padding: 14px 24px 14px 24px;

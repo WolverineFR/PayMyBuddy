@@ -20,7 +20,7 @@
 	<main>
 		<div class="formBox">
 			<h2>Pay My Buddy</h2>
-			<form class="formLog" th:action="@{/register}" method="post">
+			<form class="formLog registerForm" th:action="@{/register}" method="post">
 				<div>
 					<label for="username"></label>
 					<input class="inputStyle" type="text" id="username" name="username" placeholder="Nom d'utilisateur"
@@ -39,7 +39,7 @@
 					<button class="btn" type="submit">S'inscrire</button>
 				</div>
 				<div th:if="${registrationError}">
-					<p class="errorMessage">[[${registrationError}]]</p>
+					<p class="errorMessage" style="margin: 0;">[[${registrationError}]]</p>
 				</div>
 			</form>
 		</div>
