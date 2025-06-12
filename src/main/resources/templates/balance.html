@@ -32,22 +32,22 @@
 			<div class="userList">
 				<h2 style="text-align:center;">Liste des utilisateurs</h2>
 				<table>
-				   <thead>
-				     <tr>
-				       <th style="text-align: left;">Pseudo</th>
-				       <th style="text-align: right;">Email</th>
-				     </tr>
-				   </thead>
-				   <tbody>
-				     <tr th:each="user : ${users}">
-				       <td style="text-align: left;" th:text="${user.username}"></td>
-				       <td style="text-align: right;" th:text="${user.email}"></td>
-				     </tr>
-				   </tbody>
-				 </table>
+					<thead>
+						<tr>
+							<th style="text-align: left;">Pseudo</th>
+							<th style="text-align: right;">Email</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td style="text-align: left;" th:text="${user.username}"></td>
+							<td style="text-align: right;" th:text="${user.email}"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		
+
 		<div sec:authorize="hasRole('USER')" class="balancePage">
 			<div class="soldeBox">
 				<h2>Solde</h2>
@@ -55,8 +55,8 @@
 			</div>
 			<form sec:authorize="hasRole('USER')" th:action="@{/user/profil/balance}" method="post">
 				<label for="amount">Montant :</label>
-				<input class="inputStyle" type="number" name="amount" step="0.01" min="1.00" max="1000" placeholder="0€"
-					required />
+				<input class="inputStyle" id="amount" type="number" name="amount" step="0.01" min="1.00" max="1000"
+					placeholder="0€" required />
 
 				<button class="btn" id="credit" type="submit" name="action" value="credit">Créditer</button>
 				<button class="btn" id="flow" type="submit" name="action" value="debit">Débiter</button>

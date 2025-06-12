@@ -35,8 +35,8 @@
 						</option>
 					</select>
 					<input type="text" id="description" name="description" placeholder="Description" />
-					<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}" placeholder="0€"
-						required />
+					<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}"
+						placeholder="0€" required />
 					<button class="btn sendBtn" type="submit">Payer</button>
 				</form>
 			</div>
@@ -45,27 +45,27 @@
 
 			<div class="tableBox">
 				<h2>Mes Transactions</h2>
-			<table>
-				<colgroup>
-				    <col style="width: 45%;">
-				    <col style="width: 45%;">
-				    <col style="width: 10%;">
-				  </colgroup>
-				<thead>
-					<tr>
-						<th style="text-align: left;">Relations</th>
-						<th style="text-align: left;">Description</th>
-						<th style="text-align: end;">Montant</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="transaction : ${transactions}">
-						<td style="text-align: left;" th:text="${transaction.receiver.username}"></td>
-						<td style="text-align: left;"th:text="${transaction.description}"></td>
-						<td style="text-align: end;"th:text="${transaction.amount}+'€'"></td>
-					</tr>
-				</tbody>
-			</table>
+				<table>
+					<colgroup>
+						<col style="width: 45%;">
+						<col style="width: 45%;">
+						<col style="width: 10%;">
+					</colgroup>
+					<thead>
+						<tr>
+							<th style="text-align: left;">Relations</th>
+							<th style="text-align: left;">Description</th>
+							<th style="text-align: end;">Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="transaction : ${transactions}">
+							<td style="text-align: left;" th:text="${transaction.receiver.username}"></td>
+							<td style="text-align: left;" th:text="${transaction.description}"></td>
+							<td style="text-align: end;" th:text="${transaction.amount}+'€'"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</main>
