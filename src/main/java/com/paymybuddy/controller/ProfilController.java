@@ -62,7 +62,7 @@ public class ProfilController {
 			return "redirect:/user/profil";
 		}
 
-		if (password != null && !password.trim().isEmpty()) {
+		if (password == null || password.trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("updateError", "Le nouveau mot de passe ne peut pas être vide.");
 			logger.warn("Tentative de mise à jour du mot de passe vide pour {}", currentUser.getEmail());
 			return "redirect:/user/profil";

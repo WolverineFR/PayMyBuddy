@@ -44,12 +44,4 @@ public class SpringSecurityConfig {
 				.passwordEncoder(bCryptPasswordEncoder);
 		return authenticationManagerBuilder.build();
 	}
-
-	/*
-	 * @Bean CommandLineRunner generatePassword() { return args -> {
-	 * BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); String password
-	 * = "admin"; String hashed = encoder.encode(password);
-	 * System.out.println("Mot de passe chiffré : " + hashed); }; }
-	 * 
-	 */
 }

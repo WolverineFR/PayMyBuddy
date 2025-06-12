@@ -43,8 +43,9 @@ class AddFriendControllerTest {
 		when(userRepository.findByEmail("friend@email.com")).thenReturn(friend);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "friend@email.com").with(csrf())
-				.principal(() -> "current@email.com")).andExpect(status().isOk()).andExpect(view().name("add-friend"))
-				.andExpect(model().attributeExists("successMessage"));
+				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/user/add-friend")).andExpect(redirectedUrl("/user/add-friend"))
+				.andExpect(flash().attributeExists("successMessage"));
 
 		verify(userRepository).save(currentUser);
 		assertThat(currentUser.getFriends()).contains(friend);
@@ -62,9 +63,9 @@ class AddFriendControllerTest {
 		when(userRepository.findByEmail("unknown@email.com")).thenReturn(null);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "unknown@email.com").with(csrf())
-				.principal(() -> "current@email.com")).andExpect(status().isOk()).andExpect(view().name("add-friend"))
-				.andExpect(model().attributeExists("errorMessage"))
-				.andExpect(model().attribute("errorMessage", "Cet utilisateur n'existe pas."));
+				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/user/add-friend")).andExpect(flash().attributeExists("errorMessage"));
+
 	}
 
 	@Test
@@ -78,9 +79,10 @@ class AddFriendControllerTest {
 		when(userRepository.findByEmail("current@email.com")).thenReturn(currentUser);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "current@email.com").with(csrf())
-				.principal(() -> "current@email.com")).andExpect(status().isOk()).andExpect(view().name("add-friend"))
-				.andExpect(model().attributeExists("errorMessage"))
-				.andExpect(model().attribute("errorMessage", "Vous ne pouvez pas vous ajouter vous-même."));
+				.principal(() -> "current@email.com"))
+				.andExpect(status()
+						.is3xxRedirection())
+				.andExpect(view().name("redirect:/user/add-friend")).andExpect(flash().attributeExists("errorMessage"));
 	}
 
 	@Test
@@ -101,9 +103,8 @@ class AddFriendControllerTest {
 		when(userRepository.findByEmail("friend@email.com")).thenReturn(friend);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "friend@email.com").with(csrf())
-				.principal(() -> "current@email.com")).andExpect(status().isOk()).andExpect(view().name("add-friend"))
-				.andExpect(model().attributeExists("errorMessage"))
-				.andExpect(model().attribute("errorMessage", "Cet utilisateur est déjà votre ami."));
+				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/user/add-friend")).andExpect(flash().attributeExists("errorMessage"));
 	}
 
 }

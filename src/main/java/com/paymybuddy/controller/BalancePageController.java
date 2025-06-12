@@ -71,6 +71,7 @@ public class BalancePageController {
 
 	@GetMapping("/admin/profil/balance")
 	public String showAdminProfil(Model model) {
+		List<DBUser> allUser = userRepository.findAll();
 		List<Transaction> allTransaction = transactionRepository.findAll();
 		BigDecimal totalFees = BigDecimal.ZERO;
 
@@ -80,6 +81,7 @@ public class BalancePageController {
 			}
 		}
 		model.addAttribute("totalFees", totalFees);
+		model.addAttribute("users", allUser);
 
 		return "balance";
 	}

@@ -70,7 +70,7 @@ public class SendTransactionController {
 
 		DBUser sender = userRepository.findByEmail(senderEmail);
 		if (sender == null) {
-			logger.error("Utilisateur expéditeur introuvable: {}", senderEmail);
+			logger.error("L'utilisateur {} est introuvable.", senderEmail);
 			redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur introuvable.");
 			return "redirect:/user/transaction";
 		}
@@ -78,8 +78,8 @@ public class SendTransactionController {
 				.anyMatch(friend -> friend.getEmail().equalsIgnoreCase(friendEmail));
 
 		if (!isFriend) {
-			logger.warn("Tentative d'envoi à un utilisateur non ami : {} par {}", friendEmail, senderEmail);
-			redirectAttributes.addFlashAttribute("errorMessage", "Destinataire non valide : doit être un ami.");
+			logger.warn("Transaction impossible car l'utilisateur {} n'est pas ami avec {}", friendEmail, senderEmail);
+			redirectAttributes.addFlashAttribute("errorMessage", "Destinataire non valide");
 			return "redirect:/user/transaction";
 		}
 

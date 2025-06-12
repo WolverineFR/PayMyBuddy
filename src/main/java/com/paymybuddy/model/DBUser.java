@@ -25,10 +25,10 @@ public class DBUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="username")
+
+	@Column(name = "username")
 	@NotBlank(message = "Le pseudo ne peut pas être vide.")
 	private String username;
 
@@ -36,14 +36,14 @@ public class DBUser {
 	@NotBlank(message = "L'adresse email ne peut pas être vide.")
 	private String email;
 
-	@Column(name="password")
+	@Column(name = "password")
 	@NotBlank(message = "Le mot de passe ne peut pas être vide.")
 	private String password;
-	
-	@Column(name="balance")
+
+	@Column(name = "balance")
 	private BigDecimal balance = BigDecimal.ZERO;
-	
-	@Column(name="role")
+
+	@Column(name = "role")
 	private String role;
 
 	@OneToMany(mappedBy = "sender")
@@ -145,7 +145,5 @@ public class DBUser {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
 
 }

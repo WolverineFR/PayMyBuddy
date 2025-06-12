@@ -434,4 +434,10 @@ tbody tr {
 }
 
 
+.userList {
+	margin-top: 80px;
+}
 
+.adminFeesBox {
+	text-align: center;
+}

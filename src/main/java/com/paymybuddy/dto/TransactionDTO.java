@@ -19,6 +19,10 @@ public class TransactionDTO {
 
 	// Getters and Setters
 
+	public TransactionDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getSenderId() {
 		return senderId;
 	}

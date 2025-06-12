@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.dto.TransactionDTO;
@@ -27,16 +28,17 @@ public class TransactionService {
 	@Autowired
 	private TransactionRepository transactionRepository;
 	
-
+	@PreAuthorize("hasRole('ADMIN')")
 	public List<Transaction> getAll() {
 		return transactionRepository.findAll();
 	}
-
+	@PreAuthorize("hasRole('ADMIN')")
 	public Optional<Transaction> getTransactionById(int id) {
 		return transactionRepository.findById(id);
 	}
 
 	@Transactional
+	@PreAuthorize("hasRole('ADMIN')")
 	public Transaction addTransaction(TransactionDTO transactionDTO) {
 		DBUser sender = userRepository.findById(transactionDTO.getSenderId())
 				.orElseThrow(() -> new IllegalArgumentException("Sender not found"));

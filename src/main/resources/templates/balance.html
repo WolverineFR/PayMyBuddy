@@ -24,13 +24,32 @@
 		</div>
 	</header>
 	<main>
-		<div class="balancePage">
-			<div sec:authorize="hasRole('ADMIN')" class="adminFeesBox soldeBox">
+		<div sec:authorize="hasRole('ADMIN')" class="balancePage" style="width: 80%;">
+			<div class="adminFeesBox soldeBox">
 				<h2>Total des frais collectés</h2>
 				<p th:text="${totalFees} + €"></p>
 			</div>
-
-			<div sec:authorize="hasRole('USER')" class="soldeBox">
+			<div class="userList">
+				<h2 style="text-align:center;">Liste des utilisateurs</h2>
+				<table>
+				   <thead>
+				     <tr>
+				       <th style="text-align: left;">Pseudo</th>
+				       <th style="text-align: right;">Email</th>
+				     </tr>
+				   </thead>
+				   <tbody>
+				     <tr th:each="user : ${users}">
+				       <td style="text-align: left;" th:text="${user.username}"></td>
+				       <td style="text-align: right;" th:text="${user.email}"></td>
+				     </tr>
+				   </tbody>
+				 </table>
+			</div>
+		</div>
+		
+		<div sec:authorize="hasRole('USER')" class="balancePage">
+			<div class="soldeBox">
 				<h2>Solde</h2>
 				<p th:text="${balance} + €"></p>
 			</div>
