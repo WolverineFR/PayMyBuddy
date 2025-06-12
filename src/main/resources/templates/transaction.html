@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+	<title>Transférer</title>
+</head>
+
+<body>
+	<header>
+		<div class="headerBox">
+			<h1>Pay My Buddy</h1>
+			<nav class="navigationBox">
+				<a class="activeBtn" href="/user/transaction">Transférer</a>
+				<a href="/user/profil">Profil</a>
+				<a href="/user/add-friend">Ajouter relation</a>
+				<form id="logoutForm" action="/logout" method="post" style="display:none;">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				</form>
+				<a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Déconnexion</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<div class="transactionPage">
+			<div class="form-Box">
+				<form class="transactionForm" th:action="@{/user/transaction}" method="post">
+					<label for="email-select"></label>
+					<select name="friendEmail" id="email-select" required>
+						<option value="" disabled selected>Sélectionnez une relation</option>
+						<option th:each="friend : ${friends}" th:value="${friend.email}" th:text="${friend.email}">
+						</option>
+					</select>
+					<input type="text" id="description" name="description" placeholder="Description" />
+					<input type="number" id="amount" name="amount" step="0.01" min="1.00" th:max="${balance}"
+						placeholder="0€" required />
+					<button class="btn sendBtn" type="submit">Payer</button>
+				</form>
+			</div>
+			<p class="succesMessage" th:if="${successMessage}" th:text="${successMessage}"></p>
+			<p class="errorMessage" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+			<div class="tableBox">
+				<h2>Mes Transactions</h2>
+				<table>
+					<colgroup>
+						<col style="width: 45%;">
+						<col style="width: 45%;">
+						<col style="width: 10%;">
+					</colgroup>
+					<thead>
+						<tr>
+							<th style="text-align: left;">Relations</th>
+							<th style="text-align: left;">Description</th>
+							<th style="text-align: end;">Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="transaction : ${transactions}">
+							<td style="text-align: left;" th:text="${transaction.receiver.username}"></td>
+							<td style="text-align: left;" th:text="${transaction.description}"></td>
+							<td style="text-align: end;" th:text="${transaction.amount}+'€'"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+</body>
+
+</html>
