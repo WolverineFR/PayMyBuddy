@@ -17,9 +17,9 @@
 				<a href="/register">S'inscrire</a>
 			</nav>
 			<nav class="navigationBox" sec:authorize="isAuthenticated()">
-				<a href="/user/transaction">Transférer</a>
+				<a sec:authorize="hasRole('USER')" href="/user/transaction">Transférer</a>
 				<a href="/user/profil">Profil</a>
-				<a href="/user/add-friend">Ajouter relation</a>
+				<a sec:authorize="hasRole('USER')" href="/user/add-friend">Ajouter relation</a>
 				<form id="logoutForm" action="/logout" method="post" style="display:none;">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				</form>
