@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @WebMvcTest(RegisterController.class)
 public class RegisterControllerTest {
@@ -25,7 +25,7 @@ public class RegisterControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
     @MockBean
     private BCryptPasswordEncoder passwordEncoder;
@@ -64,7 +64,7 @@ public class RegisterControllerTest {
     @Test
     @WithMockUser(username = "martin@email.com" ,roles="USER")
     void testRegisterUser_EmailAlreadyExists() throws Exception {
-        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(testUser);
+        when(userService.getUserByEmail(testUser.getEmail())).thenReturn(testUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
                 .param("email", testUser.getEmail())
@@ -74,13 +74,13 @@ public class RegisterControllerTest {
                .andExpect(status().is3xxRedirection())
                .andExpect(redirectedUrl("/register?error=true"));
 
-        verify(userRepository, never()).save(any(DBUser.class));
+        verify(userService, never()).saveUser(any(DBUser.class));
     }
 
     @Test
     @WithMockUser(username = "martin@email.com" ,roles="USER")
     void testRegisterUser_EncodePasswordAndSave() throws Exception {
-        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(null);
+        when(userService.getUserByEmail(testUser.getEmail())).thenReturn(null);
         when(passwordEncoder.encode(testUser.getPassword())).thenReturn("encodedPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/register")
@@ -92,7 +92,7 @@ public class RegisterControllerTest {
                .andExpect(redirectedUrl("/login"));
 
         ArgumentCaptor<DBUser> userCaptor = ArgumentCaptor.forClass(DBUser.class);
-        verify(userRepository).save(userCaptor.capture());
+        verify(userService).saveUser(userCaptor.capture());
 
         DBUser savedUser = userCaptor.getValue();
         assert savedUser.getEmail().equals(testUser.getEmail());

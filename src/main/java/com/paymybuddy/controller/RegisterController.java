@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class RegisterController {
@@ -21,7 +21,7 @@ public class RegisterController {
 	private static final Logger logger = LogManager.getLogger(RegisterController.class);
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -37,14 +37,14 @@ public class RegisterController {
 
 	@PostMapping("/register")
 	public String registerUser(@ModelAttribute("user") DBUser user, RedirectAttributes redirectAttributes) {
-		if (userRepository.findByEmail(user.getEmail()) != null) {
+		if (userService.getUserByEmail(user.getEmail()) != null) {
 			redirectAttributes.addAttribute("error", "true");
 			logger.warn("Un compte existe déjà pour l'adresse {}", user.getEmail());
 			return "redirect:/register";
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRole("USER");
-		userRepository.save(user);
+		userService.saveUser(user);
 		logger.info("L'utilisateur {} est enregistré avec succès", user.getEmail());
 		return "redirect:/login";
 	}

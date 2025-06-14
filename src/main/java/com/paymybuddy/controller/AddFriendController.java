@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 import org.springframework.ui.Model;
 
@@ -20,7 +21,7 @@ public class AddFriendController {
 	private static final Logger logger = LogManager.getLogger(AddFriendController.class);
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@GetMapping("/user/add-friend")
 	public String showAddFriendPage() {
@@ -30,8 +31,8 @@ public class AddFriendController {
 	@PostMapping("/user/add-friend")
 	public String addFriendMethod(@RequestParam("email") String friendEmail, Authentication auth, RedirectAttributes redirectAttributes) {
 		String currentUserEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
-		DBUser friend = userRepository.findByEmail(friendEmail);
+		DBUser currentUser = userService.getUserByEmail(currentUserEmail);
+		DBUser friend = userService.getUserByEmail(friendEmail);
 
 		if (friend == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "Cet utilisateur n'existe pas.");
@@ -44,7 +45,7 @@ public class AddFriendController {
 			logger.warn("L'utilisateur {} est déjà dans votre liste d'ami", friend.getEmail());
 		} else {
 			currentUser.getFriends().add(friend);
-			userRepository.save(currentUser);
+			userService.saveUser(currentUser);
 			redirectAttributes.addFlashAttribute("successMessage", "Ami ajouté avec succès !");
 			logger.info("{} a été ajouté avec succès dans la liste d'ami de {}", friend.getEmail(), currentUser.getEmail());
 		}

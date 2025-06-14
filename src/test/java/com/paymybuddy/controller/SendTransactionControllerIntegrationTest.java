@@ -5,13 +5,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
-import com.paymybuddy.repository.TransactionRepository;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.TransactionService;
+import com.paymybuddy.service.UserService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,10 +30,10 @@ class SendTransactionControllerIntegrationTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@MockBean
-	private TransactionRepository transactionRepository;
+	private TransactionService transactionService;
 
 	private DBUser sender;
 	private DBUser receiver;
@@ -55,8 +54,8 @@ class SendTransactionControllerIntegrationTest {
 	@WithMockUser(username = "sender@email.com", roles = "USER")
 	void testSendTransaction_SuccessfulTransaction() throws Exception {
 
-		when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-		when(userRepository.findByEmail("receiver@email.com")).thenReturn(receiver);
+		when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+		when(userService.getUserByEmail("receiver@email.com")).thenReturn(receiver);
 
 		mockMvc.perform(post("/user/transaction").param("friendEmail", "receiver@email.com")
 				.param("description", "Dinner").param("amount", "10.00").with(csrf()))
@@ -64,7 +63,7 @@ class SendTransactionControllerIntegrationTest {
 				.andExpect(flash().attribute("successMessage", "Montant envoyé avec succès !"));
 
 		ArgumentCaptor<Transaction> transactionCaptor = ArgumentCaptor.forClass(Transaction.class);
-		verify(transactionRepository).save(transactionCaptor.capture());
+		verify(transactionService).saveTransaction(transactionCaptor.capture());
 		Transaction savedTransaction = transactionCaptor.getValue();
 
 		assert savedTransaction.getSender().equals(sender);
@@ -72,8 +71,8 @@ class SendTransactionControllerIntegrationTest {
 		assert savedTransaction.getAmount().compareTo(new BigDecimal("10.00")) == 0;
 		assert savedTransaction.getFee().compareTo(new BigDecimal("0.05")) == 0;
 
-		verify(userRepository).save(sender);
-		verify(userRepository).save(receiver);
+		verify(userService).saveUser(sender);
+		verify(userService).saveUser(receiver);
 		assert sender.getBalance().compareTo(new BigDecimal("89.95")) == 0;
 		assert receiver.getBalance().compareTo(new BigDecimal("60.00")) == 0;
 	}
@@ -82,8 +81,8 @@ class SendTransactionControllerIntegrationTest {
 	@WithMockUser(username = "sender@email.com", roles = "USER")
 	void testSendTransaction_InsufficientFunds() throws Exception {
 
-	    when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-	    when(userRepository.findByEmail("receiver@email.com")).thenReturn(receiver);
+	    when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+	    when(userService.getUserByEmail("receiver@email.com")).thenReturn(receiver);
 
 	    mockMvc.perform(post("/user/transaction")
 	            .param("friendEmail", "receiver@email.com")
@@ -95,13 +94,13 @@ class SendTransactionControllerIntegrationTest {
 	        .andExpect(flash().attributeExists("errorMessage"));
 
 
-	    verify(transactionRepository, never()).save(any(Transaction.class));
+	    verify(transactionService, never()).saveTransaction(any(Transaction.class));
 
 	    assert sender.getBalance().compareTo(new BigDecimal("100.00")) == 0;
 	    assert receiver.getBalance().compareTo(new BigDecimal("50.00")) == 0;
 	    
-	    verify(userRepository, never()).save(sender);
-	    verify(userRepository, never()).save(receiver);
+	    verify(userService, never()).saveUser(sender);
+	    verify(userService, never()).saveUser(receiver);
 	}
 
 }

@@ -22,6 +22,8 @@ import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
 import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.TransactionService;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class SendTransactionController {
@@ -29,17 +31,17 @@ public class SendTransactionController {
 	private static final Logger logger = LogManager.getLogger(SendTransactionController.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
-	TransactionRepository transactionRepository;
+	TransactionService transactionService;
 
 	@GetMapping("/user/transaction")
 	public String showTransactionPage(Authentication auth, Model model) {
 		String currentUserEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
+		DBUser currentUser = userService.getUserByEmail(currentUserEmail);
 		int userId = currentUser.getId();
-		List<Transaction> transactions = transactionRepository.findAll();
+		List<Transaction> transactions = transactionService.getAllTransactions();
 		List<Transaction> userTransactions = new ArrayList<>();
 
 		for (Transaction transaction : transactions) {
@@ -68,7 +70,7 @@ public class SendTransactionController {
 		String senderEmail = auth.getName();
 		logger.info("Début de l'envoi de transaction de {} vers {}", senderEmail, friendEmail);
 
-		DBUser sender = userRepository.findByEmail(senderEmail);
+		DBUser sender = userService.getUserByEmail(senderEmail);
 		if (sender == null) {
 			logger.error("L'utilisateur {} est introuvable.", senderEmail);
 			redirectAttributes.addFlashAttribute("errorMessage", "Utilisateur introuvable.");
@@ -83,7 +85,7 @@ public class SendTransactionController {
 			return "redirect:/user/transaction";
 		}
 
-		DBUser receiver = userRepository.findByEmail(friendEmail);
+		DBUser receiver = userService.getUserByEmail(friendEmail);
 		if (receiver == null) {
 			logger.warn("Destinataire introuvable : {}", friendEmail);
 			redirectAttributes.addFlashAttribute("errorMessage", "Destinataire introuvable.");
@@ -119,9 +121,9 @@ public class SendTransactionController {
 			transaction.setTimestamp(LocalDateTime.now());
 			transaction.setFee(fees);
 
-			transactionRepository.save(transaction);
-			userRepository.save(sender);
-			userRepository.save(receiver);
+			transactionService.saveTransaction(transaction);
+			userService.saveUser(sender);
+			userService.saveUser(receiver);
 
 			logger.info("Transaction enregistrée : {} envoie {} € à {}", senderEmail, amount, friendEmail);
 			logger.info("Frais appliqués : {} €", fees);

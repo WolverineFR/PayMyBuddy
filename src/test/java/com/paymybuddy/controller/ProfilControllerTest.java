@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @WebMvcTest(controllers = ProfilController.class)
 class ProfilControllerTest {
@@ -26,7 +26,7 @@ class ProfilControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@MockBean
 	private BCryptPasswordEncoder passwordEncoder;
@@ -38,7 +38,7 @@ class ProfilControllerTest {
 		mockUser.setUsername("Martin");
 		mockUser.setEmail("martin@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(mockUser);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(mockUser);
 
 		mockMvc.perform(get("/user/profil")).andExpect(status().isOk()).andExpect(view().name("profil"))
 				.andExpect(model().attributeExists("user"));
@@ -50,14 +50,14 @@ class ProfilControllerTest {
 		DBUser currentUser = new DBUser();
 		currentUser.setEmail("martin@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(currentUser);
-		when(userRepository.findByEmail("nouveau@email.com")).thenReturn(null);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("nouveau@email.com")).thenReturn(null);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/user/profil").param("username", "martin")
 				.param("email", "nouveau@email.com").param("password", "123").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/user/profil"));
 
-		verify(userRepository).save(any(DBUser.class));
+		verify(userService).saveUser(any(DBUser.class));
 	}
 
 	@Test
@@ -69,8 +69,8 @@ class ProfilControllerTest {
 		DBUser secondUser = new DBUser();
 		secondUser.setEmail("second@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(currentUser);
-		when(userRepository.findByEmail("second@email.com")).thenReturn(secondUser);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("second@email.com")).thenReturn(secondUser);
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/user/profil").param("username", "martin")
 				.param("email", "second@email.com").param("password", "123").with(csrf()))
@@ -83,7 +83,7 @@ class ProfilControllerTest {
 		DBUser currentUser = new DBUser();
 		currentUser.setEmail("martin@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(currentUser);
 
 		mockMvc.perform(post("/user/profil").param("username", "   ") // vide après trim
 				.param("email", "nouveau@email.com").param("password", "123456").with(csrf()))
@@ -97,7 +97,7 @@ class ProfilControllerTest {
 		DBUser currentUser = new DBUser();
 		currentUser.setEmail("martin@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(currentUser);
 
 		mockMvc.perform(post("/user/profil").param("username", "martin").param("email", "  ") // vide après trim
 				.param("password", "123456").with(csrf())).andExpect(status().is3xxRedirection())
@@ -111,7 +111,7 @@ class ProfilControllerTest {
 		DBUser currentUser = new DBUser();
 		currentUser.setEmail("martin@email.com");
 
-		when(userRepository.findByEmail("martin@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("martin@email.com")).thenReturn(currentUser);
 
 		mockMvc.perform(post("/user/profil").param("username", "martin").param("email", "nouveau@email.com")
 				.param("password", "  ") // vide après trim

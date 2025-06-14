@@ -1,7 +1,6 @@
 package com.paymybuddy.controller;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +15,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
-import com.paymybuddy.repository.TransactionRepository;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.TransactionService;
+import com.paymybuddy.service.UserService;
 
 import org.springframework.ui.Model;
 
@@ -27,15 +26,15 @@ public class BalancePageController {
 	private static final Logger logger = LogManager.getLogger(BalancePageController.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
-	TransactionRepository transactionRepository;
+	TransactionService transactionService;
 
 	@GetMapping("/user/profil/balance")
 	public String balancePage(Model model, Authentication auth) {
 		String currentUserEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
+		DBUser currentUser = userService.getUserByEmail(currentUserEmail);
 		BigDecimal balance = currentUser.getBalance();
 		model.addAttribute("balance", balance);
 
@@ -46,7 +45,7 @@ public class BalancePageController {
 	public String updateBalance(@RequestParam BigDecimal amount, @RequestParam String action, Authentication auth,
 			RedirectAttributes redirectAttributes) {
 		String email = auth.getName();
-		DBUser user = userRepository.findByEmail(email);
+		DBUser user = userService.getUserByEmail(email);
 
 		if ("credit".equals(action)) {
 			user.setBalance(user.getBalance().add(amount));
@@ -63,7 +62,7 @@ public class BalancePageController {
 			logger.info("Le compte {} a bien été débité de {} €", user.getEmail(), amount);
 		}
 
-		userRepository.save(user);
+		userService.saveUser(user);
 		redirectAttributes.addFlashAttribute("balance", user.getBalance());
 
 		return "redirect:balance";
@@ -71,8 +70,8 @@ public class BalancePageController {
 
 	@GetMapping("/admin/profil/balance")
 	public String showAdminProfil(Model model) {
-		List<DBUser> allUser = userRepository.findAll();
-		List<Transaction> allTransaction = transactionRepository.findAll();
+		List<DBUser> allUser = userService.getAllUsers();
+		List<Transaction> allTransaction = transactionService.getAllTransactions();
 		BigDecimal totalFees = BigDecimal.ZERO;
 
 		for (Transaction transaction : allTransaction) {

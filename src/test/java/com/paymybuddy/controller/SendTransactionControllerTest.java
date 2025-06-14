@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
@@ -19,8 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
-import com.paymybuddy.repository.TransactionRepository;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.TransactionService;
+import com.paymybuddy.service.UserService;
 
 @WebMvcTest(SendTransactionController.class)
 class SendTransactionControllerTest {
@@ -29,10 +28,10 @@ class SendTransactionControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@MockBean
-	private TransactionRepository transactionRepository;
+	private TransactionService transactionService;
 
 	@Test
 	@WithMockUser(username = "sender@email.com")
@@ -54,8 +53,8 @@ class SendTransactionControllerTest {
 		transaction.setReceiver(receiver);
 		transaction.setAmount(BigDecimal.ONE);
 
-		when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-		when(transactionRepository.findAll()).thenReturn(Collections.singletonList(transaction));
+		when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+		when(transactionService.getAllTransactions()).thenReturn(Collections.singletonList(transaction));
 
 		mockMvc.perform(get("/user/transaction")).andExpect(status().isOk()).andExpect(view().name("transaction"))
 				.andExpect(model().attributeExists("transactions")).andExpect(model().attributeExists("friends"))
@@ -77,17 +76,17 @@ class SendTransactionControllerTest {
 
 		sender.setFriends(Collections.singletonList(receiver));
 
-		when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-		when(userRepository.findByEmail("receiver@email.com")).thenReturn(receiver);
+		when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+		when(userService.getUserByEmail("receiver@email.com")).thenReturn(receiver);
 
 		mockMvc.perform(post("/user/transaction").param("friendEmail", "receiver@email.com")
 				.param("description", "Remboursement").param("amount", "10").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/user/transaction"))
 				.andExpect(flash().attributeExists("successMessage"));
 
-		verify(transactionRepository).save(any(Transaction.class));
-		verify(userRepository).save(sender);
-		verify(userRepository).save(receiver);
+		verify(transactionService).saveTransaction(any(Transaction.class));
+		verify(userService).saveUser(sender);
+		verify(userService).saveUser(receiver);
 	}
 
 	@Test
@@ -105,15 +104,15 @@ class SendTransactionControllerTest {
 		
 		sender.setFriends(Collections.singletonList(receiver));
 
-		when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-		when(userRepository.findByEmail("receiver@email.com")).thenReturn(receiver);
+		when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+		when(userService.getUserByEmail("receiver@email.com")).thenReturn(receiver);
 
 		mockMvc.perform(post("/user/transaction").param("friendEmail", "receiver@email.com")
 				.param("description", "Remboursement").param("amount", "10").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/user/transaction"))
 				.andExpect(flash().attributeExists("errorMessage"));
 
-		verify(transactionRepository, never()).save(any());
+		verify(transactionService, never()).saveTransaction(any());
 	}
 
 	@Test
@@ -131,16 +130,16 @@ class SendTransactionControllerTest {
 
 		sender.setFriends(Collections.emptyList());
 
-		when(userRepository.findByEmail("sender@email.com")).thenReturn(sender);
-		when(userRepository.findByEmail("receiver@email.com")).thenReturn(receiver);
+		when(userService.getUserByEmail("sender@email.com")).thenReturn(sender);
+		when(userService.getUserByEmail("receiver@email.com")).thenReturn(receiver);
 
 		mockMvc.perform(post("/user/transaction").param("friendEmail", "receiver@email.com")
 				.param("description", "Paiement test").param("amount", "10").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/user/transaction"))
 				.andExpect(flash().attribute("errorMessage", "Destinataire non valide"));
 
-		verify(transactionRepository, never()).save(any());
-		verify(userRepository, never()).save(any());
+		verify(transactionService, never()).saveTransaction(any());
+		verify(userService, never()).saveUser(any());
 	}
 
 }

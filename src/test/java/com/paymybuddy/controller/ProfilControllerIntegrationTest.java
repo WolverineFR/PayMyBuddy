@@ -9,6 +9,7 @@ import org.hamcrest.Matchers;
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class ProfilControllerIntegrationTest {
 	private MockMvc mockMvc;
 
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -45,7 +49,7 @@ public class ProfilControllerIntegrationTest {
 		user.setEmail("martin@email.com");
 		user.setPassword("password");
 		user.setRole("USER");
-		savedUser = userRepository.save(user);
+		savedUser = userService.saveUser(user);
 	}
 
 	@Test
@@ -64,7 +68,7 @@ public class ProfilControllerIntegrationTest {
 				.param("password", "newpassword").with(csrf())).andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/user/profil"));
 
-		DBUser updatedUser = userRepository.findByEmail("martin@email.com");
+		DBUser updatedUser = userService.getUserByEmail("martin@email.com");
 		assert updatedUser.getUsername().equals("martin59");
 	}
 
@@ -76,7 +80,7 @@ public class ProfilControllerIntegrationTest {
 		otherUser.setEmail("second@email.com");
 		otherUser.setPassword("pass");
 		otherUser.setRole("USER");
-		userRepository.save(otherUser);
+		userService.saveUser(otherUser);
 
 		mockMvc.perform(post("/user/profil").param("username", "Martin").param("email", "second@email.com")
 				.param("password", "newpassword").with(csrf())).andExpect(status().is3xxRedirection())

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class ProfilController {
@@ -24,7 +24,7 @@ public class ProfilController {
 	private static final Logger logger = LogManager.getLogger(ProfilController.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -32,7 +32,7 @@ public class ProfilController {
 	@GetMapping("/user/profil")
 	public String showProfilPage(Authentication auth, Model model) {
 		String currentUserEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
+		DBUser currentUser = userService.getUserByEmail(currentUserEmail);
 		model.addAttribute("user", currentUser);
 		return "profil";
 	}
@@ -41,9 +41,9 @@ public class ProfilController {
 	public String updateProfil(@RequestParam String username, @RequestParam String email, @RequestParam String password,
 			Authentication auth, RedirectAttributes redirectAttributes) {
 		String currentEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentEmail);
+		DBUser currentUser = userService.getUserByEmail(currentEmail);
 
-		if (!email.equals(currentUser.getEmail()) && userRepository.findByEmail(email) != null) {
+		if (!email.equals(currentUser.getEmail()) && userService.getUserByEmail(email) != null) {
 			redirectAttributes.addFlashAttribute("updateError", "Cet email est déjà utilisé.");
 			logger.warn("L'email {} existe déjà", email);
 			return "redirect:/user/profil";
@@ -72,7 +72,7 @@ public class ProfilController {
 		currentUser.setEmail(email);
 		currentUser.setPassword(passwordEncoder.encode(password));
 
-		userRepository.save(currentUser);
+		userService.saveUser(currentUser);
 
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(currentUser.getEmail(),
 				currentUser.getPassword(), auth.getAuthorities());

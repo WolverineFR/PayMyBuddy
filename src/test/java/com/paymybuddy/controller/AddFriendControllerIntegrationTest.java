@@ -3,6 +3,7 @@ package com.paymybuddy.controller;
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 import jakarta.transaction.Transactional;
 
@@ -13,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -28,6 +27,9 @@ class AddFriendControllerIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@Autowired
+	private UserService userService;
+	
 	@Autowired
 	private UserRepository userRepository;
 
@@ -47,14 +49,14 @@ class AddFriendControllerIntegrationTest {
 		currentUser.setEmail("current@email.com");
 		currentUser.setPassword("password");
 		currentUser.setRole("USER");
-		userRepository.save(currentUser);
+		userService.saveUser(currentUser);
 
 		friend = new DBUser();
 		friend.setUsername("Pierre");
 		friend.setEmail("friend@email.com");
 		friend.setPassword("password");
 		friend.setRole("USER");
-		userRepository.save(friend);
+		userService.saveUser(friend);
 	}
 
 	@Test
@@ -65,7 +67,7 @@ class AddFriendControllerIntegrationTest {
 				.andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/user/add-friend"))
 				.andExpect(flash().attributeExists("successMessage"));
 
-		DBUser updatedUser = userRepository.findByEmail(currentUser.getEmail());
+		DBUser updatedUser = userService.getUserByEmail(currentUser.getEmail());
 		assertThat(updatedUser.getFriends()).extracting(DBUser::getEmail).contains(friend.getEmail());
 	}
 }

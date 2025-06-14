@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ class AddFriendControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Test
 	@WithMockUser(username = "current@email.com", roles = "USER")
@@ -39,15 +40,15 @@ class AddFriendControllerTest {
 		friend.setId(2);
 		friend.setEmail("friend@email.com");
 
-		when(userRepository.findByEmail("current@email.com")).thenReturn(currentUser);
-		when(userRepository.findByEmail("friend@email.com")).thenReturn(friend);
+		when(userService.getUserByEmail("current@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("friend@email.com")).thenReturn(friend);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "friend@email.com").with(csrf())
 				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
 				.andExpect(view().name("redirect:/user/add-friend")).andExpect(redirectedUrl("/user/add-friend"))
 				.andExpect(flash().attributeExists("successMessage"));
 
-		verify(userRepository).save(currentUser);
+		verify(userService).saveUser(currentUser);
 		assertThat(currentUser.getFriends()).contains(friend);
 	}
 
@@ -59,8 +60,8 @@ class AddFriendControllerTest {
 		currentUser.setEmail("current@email.com");
 		currentUser.setFriends(new ArrayList<>());
 
-		when(userRepository.findByEmail("current@email.com")).thenReturn(currentUser);
-		when(userRepository.findByEmail("unknown@email.com")).thenReturn(null);
+		when(userService.getUserByEmail("current@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("unknown@email.com")).thenReturn(null);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "unknown@email.com").with(csrf())
 				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
@@ -76,7 +77,7 @@ class AddFriendControllerTest {
 		currentUser.setEmail("current@email.com");
 		currentUser.setFriends(new ArrayList<>());
 
-		when(userRepository.findByEmail("current@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("current@email.com")).thenReturn(currentUser);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "current@email.com").with(csrf())
 				.principal(() -> "current@email.com"))
@@ -99,8 +100,8 @@ class AddFriendControllerTest {
 		currentUser.setFriends(new ArrayList<>());
 		currentUser.getFriends().add(friend);
 
-		when(userRepository.findByEmail("current@email.com")).thenReturn(currentUser);
-		when(userRepository.findByEmail("friend@email.com")).thenReturn(friend);
+		when(userService.getUserByEmail("current@email.com")).thenReturn(currentUser);
+		when(userService.getUserByEmail("friend@email.com")).thenReturn(friend);
 
 		mockMvc.perform(post("/user/add-friend").param("email", "friend@email.com").with(csrf())
 				.principal(() -> "current@email.com")).andExpect(status().is3xxRedirection())
