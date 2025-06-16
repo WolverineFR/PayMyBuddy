@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,6 +29,9 @@ public class RegisterControllerIntegrationTest {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private TransactionRepository transactionRepository;
@@ -48,7 +52,7 @@ public class RegisterControllerIntegrationTest {
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login"));
 
 		// verifier la sauvegarde de l'user
-		DBUser savedUser = userRepository.findByEmail("martin@email.com");
+		DBUser savedUser = userService.getUserByEmail("martin@email.com");
 		assert savedUser != null;
 		assert savedUser.getUsername().equals("martin");
 		assert passwordEncoder.matches("123", savedUser.getPassword());

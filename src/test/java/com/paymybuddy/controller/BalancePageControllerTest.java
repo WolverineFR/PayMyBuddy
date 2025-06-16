@@ -11,8 +11,8 @@ import java.util.List;
 
 import com.paymybuddy.model.DBUser;
 import com.paymybuddy.model.Transaction;
-import com.paymybuddy.repository.TransactionRepository;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.TransactionService;
+import com.paymybuddy.service.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ class BalancePageControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@MockBean
-	private TransactionRepository transactionRepository;
+	private TransactionService transactionService ;
 
 	@Test
 	@WithMockUser(username = "user@email.com", roles = "USER")
@@ -40,7 +40,7 @@ class BalancePageControllerTest {
 		user.setEmail("user@email.com");
 		user.setBalance(new BigDecimal("150.50"));
 
-		when(userRepository.findByEmail("user@email.com")).thenReturn(user);
+		when(userService.getUserByEmail("user@email.com")).thenReturn(user);
 
 		mockMvc.perform(get("/user/profil/balance")).andExpect(status().isOk()).andExpect(view().name("balance"))
 				.andExpect(model().attribute("balance", new BigDecimal("150.50")));
@@ -53,14 +53,14 @@ class BalancePageControllerTest {
 		user.setEmail("user@email.com");
 		user.setBalance(new BigDecimal("100"));
 
-		when(userRepository.findByEmail("user@email.com")).thenReturn(user);
+		when(userService.getUserByEmail("user@email.com")).thenReturn(user);
 
 		mockMvc.perform(post("/user/profil/balance").param("amount", "50").param("action", "credit").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("balance"))
 				.andExpect(flash().attribute("succesMessage", "Compte crédité de 50 €."))
 				.andExpect(flash().attribute("balance", new BigDecimal("150")));
 
-		verify(userRepository).save(user);
+		verify(userService).saveUser(user);
 	}
 
 	@Test
@@ -70,14 +70,14 @@ class BalancePageControllerTest {
 		user.setEmail("user@email.com");
 		user.setBalance(new BigDecimal("100"));
 
-		when(userRepository.findByEmail("user@email.com")).thenReturn(user);
+		when(userService.getUserByEmail("user@email.com")).thenReturn(user);
 
 		mockMvc.perform(post("/user/profil/balance").param("amount", "40").param("action", "debit").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("balance"))
 				.andExpect(flash().attribute("succesMessage", "Compte débité de 40 €."))
 				.andExpect(flash().attribute("balance", new BigDecimal("60")));
 
-		verify(userRepository).save(user);
+		verify(userService).saveUser(user);
 	}
 
 	@Test
@@ -87,13 +87,13 @@ class BalancePageControllerTest {
 		user.setEmail("user@email.com");
 		user.setBalance(new BigDecimal("30"));
 
-		when(userRepository.findByEmail("user@email.com")).thenReturn(user);
+		when(userService.getUserByEmail("user@email.com")).thenReturn(user);
 
 		mockMvc.perform(post("/user/profil/balance").param("amount", "50").param("action", "debit").with(csrf()))
 				.andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("balance"))
 				.andExpect(flash().attribute("errorMessage", "Fonds insuffisants pour débiter."));
 
-		verify(userRepository, never()).save(any());
+		verify(userService, never()).saveUser(any());
 	}
 
 	@Test
@@ -115,8 +115,8 @@ class BalancePageControllerTest {
 
 		List<Transaction> allTransactions = Arrays.asList(t1, t2, t3);
 
-		when(userRepository.findAll()).thenReturn(allUsers);
-		when(transactionRepository.findAll()).thenReturn(allTransactions);
+		when(userService.getAllUsers()).thenReturn(allUsers);
+		when(transactionService.getAllTransactions()).thenReturn(allTransactions);
 
 		mockMvc.perform(get("/admin/profil/balance")).andExpect(status().isOk()).andExpect(view().name("balance"))
 				.andExpect(model().attribute("users", allUsers))

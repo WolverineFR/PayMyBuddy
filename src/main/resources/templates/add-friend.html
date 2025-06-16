@@ -13,9 +13,9 @@
 		<div class="headerBox">
 			<h1>Pay My Buddy</h1>
 			<nav class="navigationBox">
-				<a href="/user/transaction">Transférer</a>
+				<a sec:authorize="hasRole('USER')" href="/user/transaction">Transférer</a>
 				<a href="/user/profil">Profil</a>
-				<a class="activeBtn" href="/user/add-friend">Ajouter relation</a>
+				<a sec:authorize="hasRole('USER')" class="activeBtn" href="/user/add-friend">Ajouter relation</a>
 				<form id="logoutForm" action="/logout" method="post" style="display:none;">
 					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				</form>

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class ProfilController {
@@ -24,26 +24,33 @@ public class ProfilController {
 	private static final Logger logger = LogManager.getLogger(ProfilController.class);
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	/**
+	 * Affiche la page profil de l'utilisateur connecté.
+	 */
 	@GetMapping("/user/profil")
 	public String showProfilPage(Authentication auth, Model model) {
 		String currentUserEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentUserEmail);
+		DBUser currentUser = userService.getUserByEmail(currentUserEmail);
 		model.addAttribute("user", currentUser);
 		return "profil";
 	}
 
+	/**
+	 * Met à jour les informations du profil utilisateur. Valide les champs, vérifie
+	 * l'unicité de l'email. Reconnecte l'utilisateur avec les nouvelles infos.
+	 */
 	@PostMapping("/user/profil")
 	public String updateProfil(@RequestParam String username, @RequestParam String email, @RequestParam String password,
 			Authentication auth, RedirectAttributes redirectAttributes) {
 		String currentEmail = auth.getName();
-		DBUser currentUser = userRepository.findByEmail(currentEmail);
+		DBUser currentUser = userService.getUserByEmail(currentEmail);
 
-		if (!email.equals(currentUser.getEmail()) && userRepository.findByEmail(email) != null) {
+		if (!email.equals(currentUser.getEmail()) && userService.getUserByEmail(email) != null) {
 			redirectAttributes.addFlashAttribute("updateError", "Cet email est déjà utilisé.");
 			logger.warn("L'email {} existe déjà", email);
 			return "redirect:/user/profil";
@@ -68,12 +75,14 @@ public class ProfilController {
 			return "redirect:/user/profil";
 		}
 
+		// Mise à jour des données utilisateur
 		currentUser.setUsername(username);
 		currentUser.setEmail(email);
 		currentUser.setPassword(passwordEncoder.encode(password));
 
-		userRepository.save(currentUser);
+		userService.saveUser(currentUser);
 
+		// Mise à jour du contexte de sécurité avec les nouvelles infos
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(currentUser.getEmail(),
 				currentUser.getPassword(), auth.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
@@ -83,6 +92,9 @@ public class ProfilController {
 		return "redirect:/user/profil";
 	}
 
+	/**
+	 * Redirection propre pour éviter les problèmes avec trailing slash.
+	 */
 	@GetMapping("/user/profil/")
 	public RedirectView redirectProfilWithSlash() {
 		return new RedirectView("/user/profil");

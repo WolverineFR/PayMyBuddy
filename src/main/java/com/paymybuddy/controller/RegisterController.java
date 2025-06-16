@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.paymybuddy.model.DBUser;
-import com.paymybuddy.repository.UserRepository;
+import com.paymybuddy.service.UserService;
 
 @Controller
 public class RegisterController {
@@ -21,11 +21,15 @@ public class RegisterController {
 	private static final Logger logger = LogManager.getLogger(RegisterController.class);
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	/**
+	 * Affiche la page d'inscription. Ajoute un attribut d'erreur si l’email est
+	 * déjà utilisé. Initialise un objet DBUser pour le formulaire.
+	 */
 	@GetMapping("/register")
 	public String getRegisterPage(@RequestParam(value = "error", required = false) String error, Model model) {
 		if (error != null) {
@@ -35,16 +39,25 @@ public class RegisterController {
 		return "register";
 	}
 
+	/**
+	 * Traite la soumission du formulaire d'inscription. Vérifie que l'email
+	 * n'existe pas déjà. Encode le mot de passe avant sauvegarde. Assigne le rôle
+	 * USER par défaut.
+	 */
 	@PostMapping("/register")
 	public String registerUser(@ModelAttribute("user") DBUser user, RedirectAttributes redirectAttributes) {
-		if (userRepository.findByEmail(user.getEmail()) != null) {
+		if (userService.getUserByEmail(user.getEmail()) != null) {
 			redirectAttributes.addAttribute("error", "true");
 			logger.warn("Un compte existe déjà pour l'adresse {}", user.getEmail());
 			return "redirect:/register";
 		}
+		// Encodage du mot de passe avant persistance
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
+		// Attribution du rôle utilisateur par défaut
 		user.setRole("USER");
-		userRepository.save(user);
+		
+		userService.saveUser(user);
 		logger.info("L'utilisateur {} est enregistré avec succès", user.getEmail());
 		return "redirect:/login";
 	}
