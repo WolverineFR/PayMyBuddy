@@ -31,6 +31,9 @@ public class BalancePageController {
 	@Autowired
 	TransactionService transactionService;
 
+	/**
+	 * Affiche la page de solde utilisateur.
+	 */
 	@GetMapping("/user/profil/balance")
 	public String balancePage(Model model, Authentication auth) {
 		String currentUserEmail = auth.getName();
@@ -41,6 +44,16 @@ public class BalancePageController {
 		return "balance";
 	}
 
+	/**
+	 * Met à jour le solde de l'utilisateur connecté. Prend en compte le type
+	 * d'action : "credit" ou "debit".
+	 * 
+	 * @param amount             montant à créditer/débiter
+	 * @param action             type d'opération
+	 * @param auth               Authentication Spring Security
+	 * @param redirectAttributes messages flash pour la redirection
+	 * @return redirection vers la page balance
+	 */
 	@PostMapping("/user/profil/balance")
 	public String updateBalance(@RequestParam BigDecimal amount, @RequestParam String action, Authentication auth,
 			RedirectAttributes redirectAttributes) {
@@ -68,6 +81,10 @@ public class BalancePageController {
 		return "redirect:balance";
 	}
 
+	/**
+	 * Page d'administration affichant la liste des utilisateurs et les frais
+	 * totaux.
+	 */
 	@GetMapping("/admin/profil/balance")
 	public String showAdminProfil(Model model) {
 		List<DBUser> allUser = userService.getAllUsers();

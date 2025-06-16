@@ -23,11 +23,23 @@ public class AddFriendController {
 	@Autowired
 	private UserService userService;
 
+	/**
+     * Affiche la page d'ajout d'ami.
+     */
 	@GetMapping("/user/add-friend")
 	public String showAddFriendPage() {
 		return "add-friend";
 	}
 
+	/**
+     * Gère la soumission du formulaire d'ajout d'ami.
+     * Vérifie que l'ami existe, qu'on ne s'ajoute pas soi même, et qu'on ne l'a pas déjà.
+     *
+     * @param friendEmail email de l'ami à ajouter
+     * @param auth informations sur l'utilisateur connecté
+     * @param redirectAttributes attributs flash pour afficher des messages à l'utilisateur
+     * @return redirection vers la page d'ajout
+     */
 	@PostMapping("/user/add-friend")
 	public String addFriendMethod(@RequestParam("email") String friendEmail, Authentication auth, RedirectAttributes redirectAttributes) {
 		String currentUserEmail = auth.getName();
@@ -53,6 +65,9 @@ public class AddFriendController {
 		return "redirect:/user/add-friend";
 	}
 	
+	/**
+     * Redirection propre si l'utilisateur entre un slash final manuellement.
+     */
 	@GetMapping("/user/add-friend/")
 	public RedirectView redirectAddFriendWithSlash() {
 	    return new RedirectView("/user/add-friend");

@@ -29,6 +29,9 @@ public class ProfilController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	/**
+	 * Affiche la page profil de l'utilisateur connecté.
+	 */
 	@GetMapping("/user/profil")
 	public String showProfilPage(Authentication auth, Model model) {
 		String currentUserEmail = auth.getName();
@@ -37,6 +40,10 @@ public class ProfilController {
 		return "profil";
 	}
 
+	/**
+	 * Met à jour les informations du profil utilisateur. Valide les champs, vérifie
+	 * l'unicité de l'email. Reconnecte l'utilisateur avec les nouvelles infos.
+	 */
 	@PostMapping("/user/profil")
 	public String updateProfil(@RequestParam String username, @RequestParam String email, @RequestParam String password,
 			Authentication auth, RedirectAttributes redirectAttributes) {
@@ -68,12 +75,14 @@ public class ProfilController {
 			return "redirect:/user/profil";
 		}
 
+		// Mise à jour des données utilisateur
 		currentUser.setUsername(username);
 		currentUser.setEmail(email);
 		currentUser.setPassword(passwordEncoder.encode(password));
 
 		userService.saveUser(currentUser);
 
+		// Mise à jour du contexte de sécurité avec les nouvelles infos
 		Authentication newAuth = new UsernamePasswordAuthenticationToken(currentUser.getEmail(),
 				currentUser.getPassword(), auth.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
@@ -83,6 +92,9 @@ public class ProfilController {
 		return "redirect:/user/profil";
 	}
 
+	/**
+	 * Redirection propre pour éviter les problèmes avec trailing slash.
+	 */
 	@GetMapping("/user/profil/")
 	public RedirectView redirectProfilWithSlash() {
 		return new RedirectView("/user/profil");

@@ -11,6 +11,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.paymybuddy.service.CustomUserDetailsService;
 
+/**
+ * Configuration de la sécurité Spring Security pour l'application PayMyBuddy.
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
@@ -18,6 +21,12 @@ public class SpringSecurityConfig {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
+	/**
+	 * Déclaration du filtre de sécurité principal.
+	 * 
+	 * @param http l'objet HttpSecurity configuré par Spring
+	 * @return SecurityFilterChain le filtre configuré
+	 */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
@@ -30,11 +39,23 @@ public class SpringSecurityConfig {
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout")).build();
 	}
 
+	/**
+	 * Déclare un encodeur de mots de passe basé sur BCrypt.
+	 * 
+	 * @return une instance de BCryptPasswordEncoder
+	 */
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	/**
+	 * Configuration manuelle du gestionnaire d'authentification.
+	 * 
+	 * @param http                  le contexte HttpSecurity
+	 * @param bCryptPasswordEncoder l'encodeur de mot de passe à utiliser
+	 * @return une instance d'AuthenticationManager
+	 */
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
 			throws Exception {
